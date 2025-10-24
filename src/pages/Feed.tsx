@@ -1,14 +1,18 @@
-import { useState } from 'react'
+import { useEffect } from 'react'
 import { Header } from '@/components/layout/Header'
 import { useAuthStore } from '@/stores/authStore'
-import { getDefaultMockPosts } from '@/data/mockPosts'
+import { usePostsStore } from '@/stores/postsStore'
 import { PostCard } from '@/components/post/PostCard'
 import { PostEditor } from '@/components/post/PostEditor'
 import type { Post } from '@/types/post'
 
 const Feed = () => {
   const { isAuthenticated, user } = useAuthStore()
-  const [posts, setPosts] = useState<Post[]>(getDefaultMockPosts())
+  const { posts, addPost, initializePosts } = usePostsStore()
+
+  useEffect(() => {
+    initializePosts()
+  }, [initializePosts])
 
   const handleCreatePost = (content: string) => {
     if (!user) return
@@ -24,7 +28,7 @@ const Feed = () => {
       media: []
     }
 
-    setPosts([newPost, ...posts])
+    addPost(newPost)
   }
 
   return (
