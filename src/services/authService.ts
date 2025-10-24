@@ -40,7 +40,7 @@ export const authService = {
     }
   },
 
-  signup: (identifier: string, password: string): AuthResponse => {
+  signup: (identifier: string, _password: string): AuthResponse => {
     // Extract name from identifier
     const name = identifier.includes('@')
       ? identifier.split('@')[0]

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { signInSchema, SignInFormData } from '@/lib/validations'
+import { signInSchema, type SignInFormData } from '@/lib/validations'
 import { useAuthStore } from '@/stores/authStore'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
