@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import { authService } from '@/services/authService'
 
 interface User {
   id: string
@@ -11,8 +12,8 @@ interface User {
 interface AuthStore {
   user: User | null
   isAuthenticated: boolean
-  login: (email: string, password: string) => void
-  signup: (email: string, password: string, username: string) => void
+  login: (identifier: string, password: string) => { success: boolean; error?: string }
+  signup: (identifier: string, password: string) => void
   logout: () => void
 }
 
@@ -22,25 +23,23 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       isAuthenticated: false,
 
-      login: (email: string, password: string) => {
-        // Accept ANY credentials for now (mock)
-        const user: User = {
-          id: '1',
-          email,
-          name: email.split('@')[0],
-          avatar: `https://i.pravatar.cc/150?u=${email}`
+      login: (identifier: string, password: string) => {
+        const result = authService.login(identifier, password)
+
+        if (result.success && result.user) {
+          set({ user: result.user, isAuthenticated: true })
+          return { success: true }
         }
-        set({ user, isAuthenticated: true })
+
+        return { success: false, error: result.error }
       },
 
-      signup: (email: string, password: string, username: string) => {
-        const user: User = {
-          id: Date.now().toString(),
-          email,
-          name: username,
-          avatar: `https://i.pravatar.cc/150?u=${email}`
+      signup: (identifier: string, password: string) => {
+        const result = authService.signup(identifier, password)
+
+        if (result.success && result.user) {
+          set({ user: result.user, isAuthenticated: true })
         }
-        set({ user, isAuthenticated: true })
       },
 
       logout: () => {

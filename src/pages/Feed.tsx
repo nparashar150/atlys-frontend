@@ -1,10 +1,17 @@
+import { useState } from 'react'
 import { useAuthStore } from '@/stores/authStore'
 
 const Feed = () => {
   const { user, isAuthenticated, login, logout } = useAuthStore()
+  const [error, setError] = useState('')
 
   const handleLogin = () => {
-    login('test@example.com', 'password123')
+    const result = login('demo@example.com', 'password123')
+    if (!result.success) {
+      setError(result.error || 'Login failed')
+    } else {
+      setError('')
+    }
   }
 
   return (
@@ -26,11 +33,14 @@ const Feed = () => {
         ) : (
           <div>
             <p className="text-gray-600 mb-4">❌ Not logged in</p>
+            {error && (
+              <p className="text-red-600 text-sm mb-4">❌ {error}</p>
+            )}
             <button
               onClick={handleLogin}
               className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
             >
-              Test Login
+              Test Login (demo@example.com)
             </button>
           </div>
         )}
