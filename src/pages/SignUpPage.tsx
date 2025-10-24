@@ -1,4 +1,5 @@
 import { Header } from '@/components/layout/Header'
+import { SignUpForm } from '@/components/auth/SignUpForm'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 const SignUpPage = () => {
@@ -11,7 +12,7 @@ const SignUpPage = () => {
             <CardTitle>Sign Up</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-muted-foreground">Sign up form coming soon...</p>
+            <SignUpForm />
           </CardContent>
         </Card>
       </div>
