@@ -2,12 +2,25 @@ import { formatDistanceToNow } from 'date-fns'
 import type { Post } from '@/types/post'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { Heart, MessageCircle, Share2 } from 'lucide-react'
 
 interface PostCardProps {
   post: Post
 }
 
 export function PostCard({ post }: PostCardProps) {
+  const handleLike = () => {
+    alert('Like not implemented')
+  }
+
+  const handleComment = () => {
+    alert('Comment not implemented')
+  }
+
+  const handleShare = () => {
+    alert('Share not implemented')
+  }
+
   return (
     <Card className="hover:shadow-md transition-shadow">
       <CardContent className="p-6">
@@ -29,14 +42,29 @@ export function PostCard({ post }: PostCardProps) {
         <p className="text-foreground mb-4 leading-relaxed">{post.content}</p>
 
         {/* Post Actions */}
-        <div className="flex items-center gap-6 text-sm text-muted-foreground pt-2 border-t">
-          <button className="flex items-center gap-2 hover:text-foreground transition-colors py-2">
-            <span>❤️</span>
-            <span>{post.likes} likes</span>
+        <div className="flex items-center gap-4 pt-4 border-t">
+          <button
+            onClick={handleLike}
+            className="flex items-center gap-2 text-muted-foreground hover:text-red-500 transition-colors py-2 px-3 rounded-md hover:bg-accent"
+          >
+            <Heart className="w-4 h-4" />
+            <span className="text-sm">{post.likes}</span>
           </button>
-          <button className="flex items-center gap-2 hover:text-foreground transition-colors py-2">
-            <span>💬</span>
-            <span>{post.comments.length} comments</span>
+
+          <button
+            onClick={handleComment}
+            className="flex items-center gap-2 text-muted-foreground hover:text-blue-500 transition-colors py-2 px-3 rounded-md hover:bg-accent"
+          >
+            <MessageCircle className="w-4 h-4" />
+            <span className="text-sm">{post.comments.length}</span>
+          </button>
+
+          <button
+            onClick={handleShare}
+            className="flex items-center gap-2 text-muted-foreground hover:text-green-500 transition-colors py-2 px-3 rounded-md hover:bg-accent"
+          >
+            <Share2 className="w-4 h-4" />
+            <span className="text-sm">Share</span>
           </button>
         </div>
       </CardContent>
