@@ -11,7 +11,7 @@ interface ShareDropdownProps {
   postContent: string
 }
 
-export function ShareDropdown({ postContent }: ShareDropdownProps) {
+export function ShareDropdown({ postContent: _postContent }: ShareDropdownProps) {
   const shareLinks = [
     { name: 'WhatsApp', icon: '💬' },
     { name: 'Twitter', icon: '🐦' },

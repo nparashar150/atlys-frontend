@@ -1,7 +1,6 @@
 import type { Comment } from '@/types'
 import { CommentCard } from './CommentCard'
 import { CommentInput } from './CommentInput'
-import { Separator } from '@/components/ui/separator'
 
 interface CommentListProps {
   postId: string

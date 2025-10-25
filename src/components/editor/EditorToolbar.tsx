@@ -1,5 +1,5 @@
 import type { Editor } from '@tiptap/react'
-import type { LucideIcon } from 'lucide-react'
+import type { LucideProps } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { EmojiPickerButton } from './EmojiPicker'
@@ -8,7 +8,7 @@ import { BoldIcon, ItalicIcon, UnderlineIcon, ListIcon, ListOrderedIcon, QuoteIc
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
 
 interface ToolbarButtonConfig {
-  icon: LucideIcon
+  icon: React.ComponentType<LucideProps>
   action: (editor: Editor) => void
   type: 'button' | 'separator' | 'space'
 }
@@ -91,7 +91,7 @@ const HeadingSelector = ({ editor }: { editor: Editor }) => {
   )
 }
 
-const ToolbarButton = ({ icon: Icon, action, editor }: { icon: LucideIcon; action: (editor: Editor) => void; editor: Editor }) => (
+const ToolbarButton = ({ icon: Icon, action, editor }: { icon: React.ComponentType<LucideProps>; action: (editor: Editor) => void; editor: Editor }) => (
   <Button size="icon-sm" variant="ghost" onClick={() => action(editor)} className={BUTTON_CLASSES}>
     <Icon className={ICON_CLASSES} />
   </Button>

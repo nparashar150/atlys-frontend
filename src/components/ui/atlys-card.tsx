@@ -6,6 +6,8 @@ interface AtlysCardProps {
   body?: React.ReactNode
   footer?: React.ReactNode
   className?: string
+  role?: string
+  'aria-label'?: string
 }
 
 const AtlysCard = forwardRef<HTMLDivElement, AtlysCardProps>(

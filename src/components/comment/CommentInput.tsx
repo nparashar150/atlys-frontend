@@ -8,7 +8,7 @@ interface CommentInputProps {
   onComment: (content: string) => void
 }
 
-export function CommentInput({ postId, onComment }: CommentInputProps) {
+export function CommentInput({ postId: _postId, onComment }: CommentInputProps) {
   const [content, setContent] = useState('')
   const { requireAuth, AuthModalComponent } = useAuthModal()
 
