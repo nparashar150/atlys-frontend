@@ -2,6 +2,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Underline from '@tiptap/extension-underline'
 import Placeholder from '@tiptap/extension-placeholder'
+import { EditorToolbar } from './EditorToolbar'
 
 interface RichTextEditorProps {
   content: string
@@ -31,6 +32,7 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   return (
     <div className="border rounded-md">
+      <EditorToolbar editor={editor} />
       <EditorContent editor={editor} />
     </div>
   )
