@@ -36,6 +36,7 @@ export function PostEditor({ onPost }: PostEditorProps) {
             content={content}
             onChange={setContent}
             placeholder="How are you feeling today?"
+            onSubmit={handleSubmit}
           />
         </div>
 
