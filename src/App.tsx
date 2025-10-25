@@ -1,9 +1,21 @@
+import { lazy, Suspense } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { MotionConfig } from 'framer-motion'
 import { Feed } from '@/pages/Feed'
-import { SignInPage } from '@/pages/SignInPage'
-import { SignUpPage } from '@/pages/SignUpPage'
+import { ToastContainer } from '@/components/ui/toast'
+import { PageLoadingSkeleton } from '@/components/ui/PageLoadingSkeleton'
+
+// Lazy load auth pages
+const SignInPage = lazy(() => import('@/pages/SignInPage'))
+const SignUpPage = lazy(() => import('@/pages/SignUpPage'))
+
+// Lazy load devtools (dev only)
+const ReactQueryDevtools = lazy(() =>
+  import('@tanstack/react-query-devtools').then((m) => ({
+    default: m.ReactQueryDevtools,
+  }))
+)
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -18,15 +30,24 @@ const queryClient = new QueryClient({
 
 export function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Feed />} />
-          <Route path="/signin" element={<SignInPage />} />
-          <Route path="/signup" element={<SignUpPage />} />
-        </Routes>
-      </BrowserRouter>
-      <ReactQueryDevtools initialIsOpen={false} />
-    </QueryClientProvider>
+    <MotionConfig reducedMotion="user">
+      <QueryClientProvider client={queryClient}>
+        <BrowserRouter>
+          <Suspense fallback={<PageLoadingSkeleton />}>
+            <Routes>
+              <Route path="/" element={<Feed />} />
+              <Route path="/signin" element={<SignInPage />} />
+              <Route path="/signup" element={<SignUpPage />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+        <ToastContainer />
+        {import.meta.env.DEV && (
+          <Suspense fallback={null}>
+            <ReactQueryDevtools initialIsOpen={false} />
+          </Suspense>
+        )}
+      </QueryClientProvider>
+    </MotionConfig>
   )
 }

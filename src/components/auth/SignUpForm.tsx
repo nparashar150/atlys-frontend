@@ -75,7 +75,7 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
                   aria-label="Email"
                   aria-invalid={!!errors.identifier}
                   aria-describedby={errors.identifier ? "identifier-error" : undefined}
-                  className="w-full h-11 bg-black/[0.03] border-black/10"
+                  className="w-full h-11 bg-black/3 border-black/10"
                   {...register('identifier')}
                 />
                 {errors.identifier && (
@@ -98,12 +98,35 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
                   aria-label="Password"
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? "password-error" : undefined}
-                  className="w-full h-11 bg-black/[0.03] border-black/10"
+                  className="w-full h-11 bg-black/3 border-black/10"
                   {...register('password')}
                 />
                 {errors.password && (
                   <p id="password-error" className="text-sm text-destructive mt-1" role="alert">
                     {errors.password.message}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <Label htmlFor="confirmPassword" className="block text-sm font-medium text-black/75 mb-2">
+                  Confirm Password
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  type="password"
+                  placeholder="Re-enter your password"
+                  autoComplete="new-password"
+                  disabled={mutations.signup.isPending}
+                  aria-label="Confirm password"
+                  aria-invalid={!!errors.confirmPassword}
+                  aria-describedby={errors.confirmPassword ? "confirmPassword-error" : undefined}
+                  className="w-full h-11 bg-black/3 border-black/10"
+                  {...register('confirmPassword')}
+                />
+                {errors.confirmPassword && (
+                  <p id="confirmPassword-error" className="text-sm text-destructive mt-1" role="alert">
+                    {errors.confirmPassword.message}
                   </p>
                 )}
               </div>
@@ -118,7 +141,7 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
             {/* Sign up button */}
             <Button
               type="submit"
-              className="w-full h-11 bg-[#5057EA] hover:bg-[#5057EA]/90 font-medium"
+              className="w-full h-11 bg-brand-primary hover:bg-brand-primary/90 font-medium"
               disabled={mutations.signup.isPending}
               aria-label={mutations.signup.isPending ? 'Creating account' : 'Create account'}
             >
@@ -131,11 +154,11 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
             <p className="text-sm text-black/50 text-center">
               Already have an account?{' '}
               {onToggleMode ? (
-                <button type="button" onClick={onToggleMode} className="text-[#5057EA] font-medium" aria-label="Switch to login">
+                <button type="button" onClick={onToggleMode} className="text-brand-primary font-medium" aria-label="Switch to login">
                   Login →
                 </button>
               ) : (
-                <Link to="/signin" className="text-[#5057EA] font-medium" aria-label="Go to login page">
+                <Link to="/signin" className="text-brand-primary font-medium" aria-label="Go to login page">
                   Login →
                 </Link>
               )}

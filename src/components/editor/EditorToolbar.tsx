@@ -6,8 +6,9 @@ import { ALargeSmall, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Magnetic } from '@/components/ui/magnetic'
-import { EmojiPickerButton } from './EmojiPicker'
 import { BoldIcon, ItalicIcon, UnderlineIcon, ListIcon, ListOrderedIcon, QuoteIcon, CodeIcon, TrashIcon } from '@/components/icons'
+
+import { EmojiPickerButton } from './EmojiPicker'
 
 type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6
 
@@ -103,6 +104,12 @@ const ToolbarButton = ({ icon: Icon, action, editor }: { icon: React.ComponentTy
   </motion.div>
 )
 
+const EmojiButton = ({ editor }: { editor: Editor }) => (
+  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+    <EmojiPickerButton editor={editor} />
+  </motion.div>
+)
+
 export function EditorToolbar({ editor }: EditorToolbarProps) {
   const [isExpanded, setIsExpanded] = useState(false)
 
@@ -125,7 +132,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
             ))}
 
             <div className="w-px h-6 bg-black/10 mx-1 shrink-0" />
-            <EmojiPickerButton editor={editor} />
+            <EmojiButton editor={editor} />
           </div>
         </div>
       </div>
@@ -192,7 +199,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
                   ))}
 
                   <div className="w-px h-6 bg-black/10 mx-1 shrink-0" />
-                  <EmojiPickerButton editor={editor} />
+                  <EmojiButton editor={editor} />
                 </div>
               </div>
             </motion.div>

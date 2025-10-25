@@ -19,7 +19,7 @@ const AtlysCard = forwardRef<HTMLDivElement, AtlysCardProps>(
       <div
         ref={ref}
         className={cn(
-          'rounded-2xl bg-[#F7F7F7] shadow-[0_0_0_10px_#F7F7F7] overflow-hidden',
+          'rounded-2xl bg-brand-card-bg shadow-[0_0_0_10px_var(--color-brand-card-bg)] overflow-hidden',
           className
         )}
         {...props}

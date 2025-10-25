@@ -1,9 +1,12 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, lazy, Suspense } from 'react'
 import { useAuthStore } from '@/stores/authStore'
-import { AuthModal } from '@/components/auth/AuthModal'
+
+// Lazy load AuthModal
+const AuthModal = lazy(() => import('@/components/auth/AuthModal'))
 
 export function useAuthModal() {
   const [isOpen, setIsOpen] = useState(false)
+  const [isModalMounted, setIsModalMounted] = useState(false)
   const { isAuthenticated } = useAuthStore()
   const pendingActionRef = useRef<(() => void) | null>(null)
 
@@ -21,6 +24,7 @@ export function useAuthModal() {
   const requireAuth = (callback: () => void) => {
     if (!isAuthenticated) {
       pendingActionRef.current = callback
+      setIsModalMounted(true) // Trigger lazy load
       setIsOpen(true)
       return
     }
@@ -35,9 +39,15 @@ export function useAuthModal() {
     }
   }
 
-  const AuthModalComponent = () => (
-    <AuthModal open={isOpen} onOpenChange={handleModalClose} />
-  )
+  const AuthModalComponent = () => {
+    if (!isModalMounted) return null
+
+    return (
+      <Suspense fallback={null}>
+        <AuthModal open={isOpen} onOpenChange={handleModalClose} />
+      </Suspense>
+    )
+  }
 
   return {
     isOpen,

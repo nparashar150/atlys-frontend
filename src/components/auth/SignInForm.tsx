@@ -77,7 +77,7 @@ export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
                   aria-label="Email or username"
                   aria-invalid={!!errors.identifier}
                   aria-describedby={errors.identifier ? "identifier-error" : undefined}
-                  className="w-full h-11 bg-black/[0.03] border-black/10"
+                  className="w-full h-11 bg-black/3 border-black/10"
                   {...register('identifier')}
                 />
                 {errors.identifier && (
@@ -100,7 +100,7 @@ export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
                   aria-label="Password"
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? "password-error" : undefined}
-                  className="w-full h-11 bg-black/[0.03] border-black/10"
+                  className="w-full h-11 bg-black/3 border-black/10"
                   {...register('password')}
                 />
                 {errors.password && (
@@ -120,7 +120,7 @@ export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
             {/* Sign in button */}
             <Button
               type="submit"
-              className="w-full h-11 bg-[#5057EA] hover:bg-[#5057EA]/90 font-medium"
+              className="w-full h-11 bg-brand-primary hover:bg-brand-primary/90 font-medium"
               disabled={mutations.login.isPending}
               aria-label={mutations.login.isPending ? 'Signing in' : 'Sign in'}
             >
@@ -133,11 +133,11 @@ export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
             <p className="text-sm text-black/50 text-center">
               Do not have an account?{' '}
               {onToggleMode ? (
-                <button type="button" onClick={onToggleMode} className="text-[#5057EA] font-medium" aria-label="Switch to sign up">
+                <button type="button" onClick={onToggleMode} className="text-brand-primary font-medium" aria-label="Switch to sign up">
                   Sign Up
                 </button>
               ) : (
-                <Link to="/signup" className="text-[#5057EA] font-medium" aria-label="Go to sign up page">
+                <Link to="/signup" className="text-brand-primary font-medium" aria-label="Go to sign up page">
                   Sign Up
                 </Link>
               )}

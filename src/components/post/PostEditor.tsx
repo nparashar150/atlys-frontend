@@ -7,31 +7,31 @@ import { RichTextEditor } from '@/components/editor/RichTextEditor'
 import { Magnetic } from '@/components/ui/magnetic'
 import { useAuthModal } from '@/hooks'
 import { MicrophoneIcon, VideoRecordIcon, SendIcon } from '@/components/icons'
+import { announceToScreenReader } from '@/utils/a11y'
+import { isEmptyContent } from '@/utils/content'
 
 interface PostEditorProps {
   onPost: (content: string) => void
+  isPublishing?: boolean
 }
 
-export function PostEditor({ onPost }: PostEditorProps) {
+export function PostEditor({ onPost, isPublishing = false }: PostEditorProps) {
   const [content, setContent] = useState('')
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const { requireAuth, AuthModalComponent } = useAuthModal()
 
   const handleSubmit = () => {
-    if (!content.trim() || content === '<p></p>') return
+    if (isEmptyContent(content)) return
 
     requireAuth(() => {
-      setIsSubmitting(true)
       onPost(content)
       setContent('')
-
-      // Reset submitting state after animation
-      setTimeout(() => setIsSubmitting(false), 500)
     })
   }
 
   const handlePlaceholderClick = () => {
-    alert('Function not implemented')
+    requireAuth(() => {
+      announceToScreenReader('Function not yet implemented', true)
+    })
   }
 
   return (
@@ -94,20 +94,22 @@ export function PostEditor({ onPost }: PostEditorProps) {
           {/* Send button */}
           <Magnetic strength={0.2}>
             <motion.div
-              whileHover={!content.trim() || content === '<p></p>' ? {} : { scale: 1.1 }}
-              whileTap={!content.trim() || content === '<p></p>' ? {} : { scale: 0.9 }}
-              animate={isSubmitting ? { scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] } : {}}
+              whileHover={isEmptyContent(content) || isPublishing ? {} : { scale: 1.1 }}
+              whileTap={isEmptyContent(content) || isPublishing ? {} : { scale: 0.9 }}
+              animate={isPublishing ? { scale: [1, 1.2, 1], rotate: [0, 10, -10, 0] } : {}}
               transition={{ duration: 0.5, ease: 'easeOut' }}
             >
               <Button
                 size="icon"
                 variant="ghost"
                 onClick={handleSubmit}
-                disabled={!content.trim() || content === '<p></p>'}
+                disabled={isEmptyContent(content) || isPublishing}
                 className="hover:bg-black/10 disabled:opacity-50 p-0"
-                aria-label="Post"
+                aria-label={isPublishing ? "Publishing post..." : "Post"}
+                aria-live="polite"
+                aria-busy={isPublishing}
               >
-                <SendIcon className="w-full h-full" color="#5057EA" />
+                <SendIcon className="w-full h-full text-brand-primary" />
               </Button>
             </motion.div>
           </Magnetic>

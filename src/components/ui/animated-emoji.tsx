@@ -1,3 +1,5 @@
+import { useState } from 'react'
+
 interface AnimatedEmojiProps {
   emoji: string
   size?: number
@@ -5,6 +7,8 @@ interface AnimatedEmojiProps {
 }
 
 export function AnimatedEmoji({ emoji, size = 32, className = '' }: AnimatedEmojiProps) {
+  const [hasError, setHasError] = useState(false)
+
   // Convert emoji to hexadecimal Unicode code point
   const getEmojiHex = (emoji: string): string => {
     const codePoint = emoji.codePointAt(0)
@@ -14,8 +18,8 @@ export function AnimatedEmoji({ emoji, size = 32, className = '' }: AnimatedEmoj
 
   const emojiHex = getEmojiHex(emoji)
 
-  // If we can't get hex, fallback to regular emoji
-  if (!emojiHex) {
+  // If we can't get hex or image failed to load, fallback to regular emoji
+  if (!emojiHex || hasError) {
     return <span className={className}>{emoji}</span>
   }
 
@@ -31,13 +35,9 @@ export function AnimatedEmoji({ emoji, size = 32, className = '' }: AnimatedEmoj
         width={size}
         height={size}
         className="inline-block"
-        onError={(e) => {
-          // Fallback to regular emoji if image fails to load
-          const target = e.currentTarget
-          const parent = target.parentElement
-          if (parent) {
-            parent.outerHTML = `<span class="${className}">${emoji}</span>`
-          }
+        onError={() => {
+          // Use React state to trigger re-render with fallback
+          setHasError(true)
         }}
       />
     </picture>

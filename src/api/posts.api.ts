@@ -189,7 +189,7 @@ export async function createComment(
   postId: string,
   content: string,
   author: Post['author']
-): Promise<Post> {
+): Promise<Comment> {
   await randomDelay()
 
   const post = MOCK_POSTS.find(p => p.id === postId)
@@ -197,7 +197,7 @@ export async function createComment(
     throw new Error('Post not found')
   }
 
-  const newComment = {
+  const newComment: Comment = {
     id: `c${Date.now()}`,
     postId,
     content,
@@ -206,5 +206,5 @@ export async function createComment(
   }
 
   post.comments.push(newComment)
-  return { ...post }
+  return newComment
 }

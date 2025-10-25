@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { formatDistanceToNow } from 'date-fns'
+import DOMPurify from 'dompurify'
 import type { Post } from '@/types'
 import { AtlysCard } from '@/components/ui/atlys-card'
 import { Button } from '@/components/ui/button'
@@ -10,10 +11,11 @@ import { Magnetic } from '@/components/ui/magnetic'
 import { CommentList } from '@/components/comment/CommentList'
 import { useAuthModal } from '@/hooks'
 import { HeartIcon, CommentIcon, SendShareIcon } from '@/components/icons'
+import { announceToScreenReader } from '@/utils/a11y'
 
 interface PostCardProps {
   post: Post
-  onAddComment: (postId: string, content: string) => void
+  onAddComment: (content: string) => void
 }
 
 export function PostCard({ post, onAddComment }: PostCardProps) {
@@ -24,7 +26,7 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
   const handleLike = () => {
     requireAuth(() => {
       setIsLiked(!isLiked)
-      alert('Like not implemented')
+      announceToScreenReader('Like feature not yet implemented', true)
     })
   }
 
@@ -34,13 +36,9 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
     })
   }
 
-  const handleAddComment = (content: string) => {
-    onAddComment(post.id, content)
-  }
-
   const handleShare = () => {
     requireAuth(() => {
-      alert('Share not implemented')
+      announceToScreenReader('Share feature not yet implemented', true)
     })
   }
 
@@ -73,8 +71,8 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
               </div>
               <div className="w-1" />
               <div
-                className="text-sm text-black/85 font-medium leading-normal prose prose-sm max-w-none"
-                dangerouslySetInnerHTML={{ __html: post.content }}
+                className="text-sm text-black/85 leading-normal prose prose-sm max-w-none"
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.content) }}
               />
             </div>
 
@@ -88,11 +86,16 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
                   transition={{ duration: 0.3, ease: 'easeOut' }}
                   className="overflow-hidden"
                 >
-                  <div className="mt-4 pt-4 border-t border-black/10">
+                  <div
+                    id={`comments-${post.id}`}
+                    className="mt-4 pt-4 border-t border-black/10"
+                    role="region"
+                    aria-label="Comments section"
+                  >
                     <CommentList
                       postId={post.id}
                       comments={post.comments}
-                      onAddComment={handleAddComment}
+                      onAddComment={onAddComment}
                     />
                   </div>
                 </motion.div>
@@ -130,6 +133,7 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
                   className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
                   aria-label={showComments ? 'Hide comments' : 'Show comments'}
                   aria-expanded={showComments}
+                  aria-controls={`comments-${post.id}`}
                 >
                   <CommentIcon size={18} strokeWidth={1.5} />
                 </Button>
