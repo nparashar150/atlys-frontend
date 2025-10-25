@@ -34,19 +34,23 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
   return (
     <>
       <AtlysCard
+        role="article"
+        aria-label={`Post by ${post.author.name}`}
         body={
           <div className="p-4">
             <div className="grid grid-cols-[auto_auto_1fr] gap-x-1.5 gap-y-3">
               {/* Row 1: Avatar and User Info */}
               <Avatar className="w-10 h-10 rounded-lg row-span-1">
-                <AvatarImage src={post.author.avatar} alt={post.author.name} />
+                <AvatarImage src={post.author.avatar} alt={`${post.author.name}'s avatar`} />
                 <AvatarFallback>{post.author.name[0]}</AvatarFallback>
               </Avatar>
               <div className="w-1" />
               <div>
                 <h3 className="text-sm font-semibold text-black">{post.author.name}</h3>
                 <p className="text-xs text-black/40 font-medium mt-0.5">
-                  {formatDistanceToNow(post.createdAt, { addSuffix: true })}
+                  <time dateTime={new Date(post.createdAt).toISOString()}>
+                    {formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
+                  </time>
                 </p>
               </div>
 
@@ -81,6 +85,7 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
                 variant="ghost"
                 onClick={handleLike}
                 className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
+                aria-label="Like post"
               >
                 <HeartIcon size={18} strokeWidth={1.5} />
               </Button>
@@ -90,6 +95,8 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
                 variant="ghost"
                 onClick={handleCommentClick}
                 className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
+                aria-label={showComments ? 'Hide comments' : 'Show comments'}
+                aria-expanded={showComments}
               >
                 <CommentIcon size={18} strokeWidth={1.5} />
               </Button>
@@ -98,6 +105,7 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
                 size="icon"
                 variant="ghost"
                 className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
+                aria-label="Share post"
               >
                 <SendShareIcon size={18} strokeWidth={1.5} />
               </Button>

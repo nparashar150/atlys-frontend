@@ -29,7 +29,7 @@ export function PostEditor({ onPost }: PostEditorProps) {
 
   return (
     <>
-      <AtlysCard className="p-0 overflow-hidden gap-0">
+      <AtlysCard className="p-0 overflow-hidden gap-0" role="form" aria-label="Create new post">
         {/* Editor with padding for content area */}
         <div className="p-2">
           <RichTextEditor
@@ -51,6 +51,7 @@ export function PostEditor({ onPost }: PostEditorProps) {
               variant="ghost"
               onClick={handlePlaceholderClick}
               className="bg-black/5 rounded-lg hover:bg-black/10"
+              aria-label="Add attachment"
             >
               <Plus className="w-4 h-4 text-black/60" />
             </Button>
@@ -60,6 +61,7 @@ export function PostEditor({ onPost }: PostEditorProps) {
               variant="ghost"
               onClick={handlePlaceholderClick}
               className="hover:bg-black/10"
+              aria-label="Add audio"
             >
               <MicrophoneIcon className="w-4 h-4 text-black/60" />
             </Button>
@@ -69,6 +71,7 @@ export function PostEditor({ onPost }: PostEditorProps) {
               variant="ghost"
               onClick={handlePlaceholderClick}
               className="hover:bg-black/10"
+              aria-label="Add video"
             >
               <VideoRecordIcon className="w-4 h-4 text-black/60" />
             </Button>
@@ -81,6 +84,7 @@ export function PostEditor({ onPost }: PostEditorProps) {
             onClick={handleSubmit}
             disabled={!content.trim() || content === '<p></p>'}
             className="hover:bg-black/10 disabled:opacity-50 p-0"
+            aria-label="Post"
           >
             <SendIcon className="w-full h-full" color="#5057EA" />
           </Button>

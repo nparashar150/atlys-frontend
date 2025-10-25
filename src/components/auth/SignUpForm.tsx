@@ -46,7 +46,7 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(onSubmit)} aria-label="Sign up form">
       <AtlysCard
         body={
           <div className="p-6">
@@ -75,11 +75,16 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
                   placeholder="Enter your email"
                   autoComplete="username"
                   disabled={isLoading}
+                  aria-label="Email"
+                  aria-invalid={!!errors.identifier}
+                  aria-describedby={errors.identifier ? "identifier-error" : undefined}
                   className="w-full h-11 bg-black/[0.03] border-black/10"
                   {...register('identifier')}
                 />
                 {errors.identifier && (
-                  <p className="text-sm text-destructive mt-1">{errors.identifier.message}</p>
+                  <p id="identifier-error" className="text-sm text-destructive mt-1" role="alert">
+                    {errors.identifier.message}
+                  </p>
                 )}
               </div>
 
@@ -93,23 +98,33 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
                   placeholder="Choose a strong password"
                   autoComplete="new-password"
                   disabled={isLoading}
+                  aria-label="Password"
+                  aria-invalid={!!errors.password}
+                  aria-describedby={errors.password ? "password-error" : undefined}
                   className="w-full h-11 bg-black/[0.03] border-black/10"
                   {...register('password')}
                 />
                 {errors.password && (
-                  <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
+                  <p id="password-error" className="text-sm text-destructive mt-1" role="alert">
+                    {errors.password.message}
+                  </p>
                 )}
               </div>
             </div>
 
             {error && (
-              <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md mb-4">
+              <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md mb-4" role="alert" aria-live="polite">
                 {error}
               </div>
             )}
 
             {/* Sign up button */}
-            <Button type="submit" className="w-full h-11 bg-[#5057EA] hover:bg-[#5057EA]/90 font-medium" disabled={isLoading}>
+            <Button
+              type="submit"
+              className="w-full h-11 bg-[#5057EA] hover:bg-[#5057EA]/90 font-medium"
+              disabled={isLoading}
+              aria-label={isLoading ? 'Creating account' : 'Create account'}
+            >
               {isLoading ? 'Creating account...' : 'Continue'}
             </Button>
           </div>
@@ -119,11 +134,11 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
             <p className="text-sm text-black/50 text-center">
               Already have an account?{' '}
               {onToggleMode ? (
-                <button type="button" onClick={onToggleMode} className="text-[#5057EA] font-medium">
+                <button type="button" onClick={onToggleMode} className="text-[#5057EA] font-medium" aria-label="Switch to login">
                   Login →
                 </button>
               ) : (
-                <Link to="/signin" className="text-[#5057EA] font-medium">
+                <Link to="/signin" className="text-[#5057EA] font-medium" aria-label="Go to login page">
                   Login →
                 </Link>
               )}
