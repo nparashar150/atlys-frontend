@@ -1,7 +1,9 @@
 import type { Editor } from '@tiptap/react'
 import type { LucideProps } from 'lucide-react'
+import { motion } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import { Magnetic } from '@/components/ui/magnetic'
 import { EmojiPickerButton } from './EmojiPicker'
 import { BoldIcon, ItalicIcon, UnderlineIcon, ListIcon, ListOrderedIcon, QuoteIcon, CodeIcon, TrashIcon } from '@/components/icons'
 
@@ -92,9 +94,11 @@ const HeadingSelector = ({ editor }: { editor: Editor }) => {
 }
 
 const ToolbarButton = ({ icon: Icon, action, editor }: { icon: React.ComponentType<LucideProps>; action: (editor: Editor) => void; editor: Editor }) => (
-  <Button size="icon-sm" variant="ghost" onClick={() => action(editor)} className={BUTTON_CLASSES}>
-    <Icon className={ICON_CLASSES} />
-  </Button>
+  <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+    <Button size="icon-sm" variant="ghost" onClick={() => action(editor)} className={BUTTON_CLASSES}>
+      <Icon className={ICON_CLASSES} />
+    </Button>
+  </motion.div>
 )
 
 export function EditorToolbar({ editor }: EditorToolbarProps) {
@@ -117,14 +121,18 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
         <EmojiPickerButton editor={editor} />
       </div>
 
-      <Button
-        size="icon"
-        variant="ghost"
-        onClick={() => editor.commands.clearContent()}
-        className="w-10 h-10 bg-red-500/15 rounded-lg hover:bg-red-500/25 ml-auto"
-      >
-        <TrashIcon className="w-3.5 h-3.5 text-[#D83B3B]" />
-      </Button>
+      <Magnetic strength={0.2}>
+        <motion.div whileHover={{ scale: 1.1, rotate: 5 }} whileTap={{ scale: 0.9 }}>
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={() => editor.commands.clearContent()}
+            className="w-10 h-10 bg-red-500/15 rounded-lg hover:bg-red-500/25 ml-auto"
+          >
+            <TrashIcon className="w-3.5 h-3.5 text-[#D83B3B]" />
+          </Button>
+        </motion.div>
+      </Magnetic>
     </div>
   )
 }

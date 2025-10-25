@@ -17,13 +17,20 @@ export const authService = {
     )
 
     if (demoAccount) {
+      // Use different avatar seeds for test accounts to avoid undesirable images
+      const avatarSeed = demoAccount.email === 'test@user.com'
+        ? 'test1@user.com'
+        : demoAccount.email === 'demo@example.com'
+        ? 'test2@user.com'
+        : demoAccount.email
+
       return {
         success: true,
         user: {
           id: '1',
           email: demoAccount.email,
           name: demoAccount.name,
-          avatar: `https://i.pravatar.cc/150?u=${demoAccount.email}`
+          avatar: `https://i.pravatar.cc/150?u=${avatarSeed}`
         }
       }
     }

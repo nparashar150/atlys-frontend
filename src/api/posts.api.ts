@@ -1,6 +1,5 @@
 import type { Post, Comment, User } from '@/types'
-
-const POST_EMOJIS = ['💭', '🌟', '✨', '💡', '🎯', '🚀', '💫', '🎨', '🔥', '⚡', '🌈', '🎪', '🎭', '🎬', '🎤']
+import { getRandomEmoji } from '@/config/posts.config'
 
 const NAMES = [
   'Sarah Johnson', 'Mike Chen', 'Emma Wilson', 'Alex Kumar', 'Lisa Park',
@@ -10,26 +9,45 @@ const NAMES = [
 ]
 
 const POST_CONTENTS = [
-  'Just got back from an amazing trip to Iceland! The Northern Lights were absolutely breathtaking. 🌌',
-  'Currently planning my summer vacation to Japan. Any recommendations for hidden gems in Tokyo? 🗾',
-  'The street food in Bangkok is out of this world! Can\'t decide what to eat next. 🍜',
-  'Working remotely from Bali has been a dream come true. The coworking spaces here are incredible! 💼🏝️',
-  'Finally hiked to Machu Picchu! The journey was tough but absolutely worth it. 🏔️',
-  'Coffee shops in Melbourne are on another level. Every corner has a hidden gem! ☕',
-  'Exploring the ancient ruins of Petra. History comes alive here! 🏛️',
-  'The Northern Lights in Norway exceeded all expectations. Nature\'s best show! 🌟',
-  'Road tripping through New Zealand\'s South Island. Every turn is a postcard! 🚗',
-  'Just tried authentic Neapolitan pizza in Naples. Nothing compares! 🍕',
-  'Volunteering at an elephant sanctuary in Thailand. Life-changing experience! 🐘',
-  'Sunrise at Angkor Wat was absolutely breathtaking. Worth waking up at 4 AM! 🌅',
-  'Scuba diving in the Great Barrier Reef. The underwater world is incredible! 🐠',
-  'Exploring the souks of Marrakech. The colors, smells, and sounds are overwhelming in the best way! 🕌',
-  'Safari in Kenya was surreal. Saw the Big Five in one day! 🦁',
-  'Cherry blossom season in Kyoto is pure magic. Timing couldn\'t have been better! 🌸',
-  'Backpacking through Patagonia. The landscapes are otherworldly! 🏔️',
-  'Wine tasting in Tuscany. Living my best life! 🍷',
-  'Camping under the stars in the Sahara Desert. No words can describe this experience! ⭐',
-  'Exploring the temples of Bagan at sunrise. Myanmar is incredible! 🛕'
+  'Just got back from Iceland! The Northern Lights were absolutely breathtaking - watched them dance across the sky for 2 hours straight. Drove the Ring Road, stopped at waterfalls and black sand beaches. The secret lagoons we found were even better than Blue Lagoon! 🌌✨',
+
+  'Planning my summer trip to Japan! Found some amazing hidden gems in Tokyo - rooftop bars in Shibuya and tiny ramen shops locals love. Also visiting teamLab Borderless before it moves. Any recommendations for lesser-known neighborhoods? 🗾🍜',
+
+  'Bangkok street food is incredible! Been here a week trying everything from pad thai to boat noodles. The mango sticky rice from the night market is the best thing ever. Found family-run stalls with amazing green curry. So many options! 🍜🔥',
+
+  'Working remotely from Bali has been a dream! Bouncing between Canggu and Ubud for a month. The coworking spaces have fast WiFi, great coffee, and amazing people. After work I\'m 5 minutes from the beach for sunset surf sessions. Might extend indefinitely! 💼🏝️',
+
+  'Finally made it to Machu Picchu! The 4-day Inca Trail was brutal but crossing through the Sun Gate at sunrise was magical. Our guide shared fascinating history and we visited empty ruins along the way. Coca tea helped with the altitude. Worth every step! 🏔️⛰️',
+
+  'Melbourne\'s coffee culture is next level! Visited over 20 cafes in two weeks. Every corner has a gem serving exceptional flat whites. Favorites are Patricia Coffee Brewers and Market Lane. The baristas here are true artists. Also loving the laneway street art! ☕🎨',
+
+  'Exploring Petra has been surreal! Walking through the Siq and seeing the Treasury emerge is beyond photos. Hiked to the Monastery - 800+ steps but worth it. Bedouin guides shared amazing stories. Saw Petra by candlelight at night. The history here is overwhelming! 🏛️✨',
+
+  'Northern Lights in Norway exceeded all expectations! Based in Tromsø for a week doing aurora hunting trips. Last night\'s display was incredible - green, purple, and red curtains dancing. Also went dog sledding and ice fishing. This winter wonderland is magical! 🌟❄️',
+
+  'Road tripping through New Zealand\'s South Island! Every turn reveals jaw-dropping vistas - pristine lakes, snow-capped mountains, forests. Drove from Christchurch to Queenstown via Lake Tekapo and Mount Cook. Tomorrow hiking Routeburn Track. This country is one giant postcard! 🚗🏔️',
+
+  'Authentic Neapolitan pizza in Naples changed my life! Visited Pizzeria Brandi where margherita was born, but even corner spots serve gourmet-level pies. The wood-fired crust is perfect. Been eating pizza twice daily for 3 days. No regrets! The espresso here is incredible too. 🍕☕',
+
+  'Volunteering at an elephant sanctuary in Chiang Mai is life-changing! We feed them, bathe them in the river, and learn about conservation. Each has such unique personalities. Baby Som follows me everywhere! The sanctuary rescues elephants from tourism. This work matters. 🐘💚',
+
+  'Sunrise at Angkor Wat was worth the 4 AM wake up! Got a perfect spot by the reflecting pool. Watching the temple reveal itself as the sky turned pink was magical. Later explored Ta Prohm with trees growing through ruins. Three days of temple-hopping barely scratched the surface! 🌅🛕',
+
+  'Scuba diving the Great Barrier Reef opened my eyes to another world! Saw sea turtles, reef sharks, giant clams, vibrant coral. Our instructor pointed out a blue-ringed octopus from safe distance. Did three dives, each site completely different. Already planning the next diving trip! 🐠🌊',
+
+  'The souks of Marrakech are sensory overload in the best way! Vibrant spices, handwoven rugs, traditional lanterns everywhere. Sounds of vendors, smell of mint tea and tagines, handcrafted textiles. Got lost five times. Haggling is fun once you get it. Supporting local artisans! 🕌✨',
+
+  'Safari in Kenya was surreal! Saw all Big Five in one day at Maasai Mara - lions, leopards, elephants, buffalo, rhinos. Watched a pride hunt at sunset and witnessed the Great Migration. Our Maasai guide could spot animals from impossible distances. Photos don\'t do it justice! 🦁🐘',
+
+  'Cherry blossom season in Kyoto is pure magic! Perfect timing - the city transformed into a pink wonderland. Walked the Philosopher\'s Path with cherry trees reflected in the canal. Did hanami picnics in Maruyama Park with locals. Traditional temples framed by sakura are breathtaking! 🌸🇯🇵',
+
+  'Backpacking through Patagonia showed me landscapes I didn\'t know existed! Torres del Paine scenery is otherworldly - granite towers, blue glaciers, turquoise lakes, insane wind. The W Trek was tough but worth it. Wild camped with guanacos nearby. Weather changes every 10 minutes here! 🏔️⛺',
+
+  'Wine tasting in Tuscany and living my best life! Staying at an agriturismo in Chianti surrounded by vineyards and olive groves. Visiting wineries daily, tasting Brunello and Super Tuscans. Yesterday had a 6-course wine-paired lunch lasting 4 hours. Made fresh pasta too! 🍷🇮🇹',
+
+  'Camping under Sahara Desert stars defies description! Rode camels 2 hours into dunes at sunset, everything turned golden. Berber guides cooked tagine over fire. The stars - Milky Way so bright it cast shadows! No light pollution for miles. Slept under open sky, woke to spectacular sunrise. ⭐🏜️',
+
+  'Exploring Bagan temples at sunrise was the Myanmar trip highlight! Climbed a temple at 4:30 AM to watch sunrise over thousands of ancient pagodas. Hot air balloons floated over temples as mist cleared. Spent three days exploring by e-bike, finding hidden temples. Magical and undiscovered! 🛕🎈'
 ]
 
 const COMMENT_CONTENTS = [
@@ -51,10 +69,6 @@ const COMMENT_CONTENTS = [
   'How crowded was it?',
   'Did you get a guide or explore on your own?'
 ]
-
-function getRandomEmoji(): string {
-  return POST_EMOJIS[Math.floor(Math.random() * POST_EMOJIS.length)]
-}
 
 function getRandomItem<T>(array: T[]): T {
   return array[Math.floor(Math.random() * array.length)]
@@ -155,7 +169,7 @@ export async function fetchPosts({ pageParam = 0 }: FetchPostsParams): Promise<F
   }
 }
 
-export async function createPost(content: string, author: Post['author']): Promise<Post> {
+export async function createPost(content: string, author: Post['author'], emoji?: string): Promise<Post> {
   await randomDelay()
 
   const newPost: Post = {
@@ -163,7 +177,7 @@ export async function createPost(content: string, author: Post['author']): Promi
     content,
     author,
     createdAt: new Date().toISOString(),
-    emoji: getRandomEmoji(),
+    emoji: emoji || getRandomEmoji(),
     comments: []
   }
 

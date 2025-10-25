@@ -16,11 +16,11 @@ export function usePosts() {
   })
 
   const createMutation = useMutation({
-    mutationFn: (content: string) => {
+    mutationFn: ({ content, emoji }: { content: string; emoji: string }) => {
       if (!user) throw new Error('User not authenticated')
-      return createPost(content, user)
+      return createPost(content, user, emoji)
     },
-    onMutate: async (content) => {
+    onMutate: async ({ content, emoji }) => {
       await queryClient.cancelQueries({ queryKey: ['posts'] })
 
       const previousData = queryClient.getQueryData<{ pages: FetchPostsResponse[]; pageParams: number[] }>(['posts'])
@@ -31,7 +31,7 @@ export function usePosts() {
           content,
           author: user,
           createdAt: new Date().toISOString(),
-          emoji: '💭',
+          emoji,
           comments: []
         }
 

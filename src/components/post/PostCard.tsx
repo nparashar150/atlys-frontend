@@ -1,9 +1,12 @@
 import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { formatDistanceToNow } from 'date-fns'
 import type { Post } from '@/types'
 import { AtlysCard } from '@/components/ui/atlys-card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
+import { AnimatedEmoji } from '@/components/ui/animated-emoji'
+import { Magnetic } from '@/components/ui/magnetic'
 import { CommentList } from '@/components/comment/CommentList'
 import { useAuthModal } from '@/hooks'
 import { HeartIcon, CommentIcon, SendShareIcon } from '@/components/icons'
@@ -15,10 +18,12 @@ interface PostCardProps {
 
 export function PostCard({ post, onAddComment }: PostCardProps) {
   const [showComments, setShowComments] = useState(false)
+  const [isLiked, setIsLiked] = useState(false)
   const { requireAuth, AuthModalComponent } = useAuthModal()
 
   const handleLike = () => {
     requireAuth(() => {
+      setIsLiked(!isLiked)
       alert('Like not implemented')
     })
   }
@@ -55,8 +60,8 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
               </div>
 
               {/* Row 2: Reaction Emoji and Post Content */}
-              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-base self-start justify-self-center">
-                {post.emoji}
+              <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center self-start justify-self-center">
+                <AnimatedEmoji emoji={post.emoji} size={20} />
               </div>
               <div className="w-1" />
               <div
@@ -66,49 +71,72 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
             </div>
 
             {/* Comments Section */}
-            {showComments && (
-              <div className="mt-4 pt-4 border-t border-black/10">
-                <CommentList
-                  postId={post.id}
-                  comments={post.comments}
-                  onAddComment={handleAddComment}
-                />
-              </div>
-            )}
+            <AnimatePresence>
+              {showComments && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3, ease: 'easeOut' }}
+                  className="overflow-hidden"
+                >
+                  <div className="mt-4 pt-4 border-t border-black/10">
+                    <CommentList
+                      postId={post.id}
+                      comments={post.comments}
+                      onAddComment={handleAddComment}
+                    />
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         }
         footer={
           <div className="px-2">
             <div className="flex items-center gap-2">
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={handleLike}
-                className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
-                aria-label="Like post"
-              >
-                <HeartIcon size={18} strokeWidth={1.5} />
-              </Button>
+              <Magnetic strength={0.2}>
+                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    onClick={handleLike}
+                    className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
+                    aria-label="Like post"
+                  >
+                    <motion.div
+                      animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
+                      transition={{ duration: 0.3, ease: 'easeOut' }}
+                    >
+                      <HeartIcon size={18} strokeWidth={1.5} />
+                    </motion.div>
+                  </Button>
+                </motion.div>
+              </Magnetic>
 
-              <Button
-                size="icon"
-                variant="ghost"
-                onClick={handleCommentClick}
-                className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
-                aria-label={showComments ? 'Hide comments' : 'Show comments'}
-                aria-expanded={showComments}
-              >
-                <CommentIcon size={18} strokeWidth={1.5} />
-              </Button>
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={handleCommentClick}
+                  className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
+                  aria-label={showComments ? 'Hide comments' : 'Show comments'}
+                  aria-expanded={showComments}
+                >
+                  <CommentIcon size={18} strokeWidth={1.5} />
+                </Button>
+              </motion.div>
 
-              <Button
-                size="icon"
-                variant="ghost"
-                className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
-                aria-label="Share post"
-              >
-                <SendShareIcon size={18} strokeWidth={1.5} />
-              </Button>
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
+                  aria-label="Share post"
+                >
+                  <SendShareIcon size={18} strokeWidth={1.5} />
+                </Button>
+              </motion.div>
             </div>
           </div>
         }
