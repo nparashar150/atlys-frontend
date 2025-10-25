@@ -4,18 +4,15 @@ import type { Post } from '@/types/post'
 import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Heart, MessageCircle, Share2 } from 'lucide-react'
-import { CommentInput } from '@/components/comment/CommentInput'
-import { usePostsStore } from '@/stores/postsStore'
-import { useAuthStore } from '@/stores/authStore'
+import { CommentList } from '@/components/comment/CommentList'
 
 interface PostCardProps {
   post: Post
+  onAddComment: (postId: string, content: string) => void
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, onAddComment }: PostCardProps) {
   const [showComments, setShowComments] = useState(false)
-  const addComment = usePostsStore(state => state.addComment)
-  const user = useAuthStore(state => state.user)
 
   const handleLike = () => {
     alert('Like not implemented')
@@ -26,8 +23,7 @@ export function PostCard({ post }: PostCardProps) {
   }
 
   const handleAddComment = (content: string) => {
-    if (!user) return
-    addComment(post.id, content, user)
+    onAddComment(post.id, content)
   }
 
   const handleShare = () => {
@@ -83,33 +79,11 @@ export function PostCard({ post }: PostCardProps) {
 
         {/* Comments Section */}
         {showComments && (
-          <div className="mt-4 pt-4 border-t space-y-4">
-            {/* Existing Comments */}
-            {post.comments.length > 0 && (
-              <div className="space-y-3">
-                {post.comments.map((comment) => (
-                  <div key={comment.id} className="flex gap-3">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
-                      <AvatarFallback>{comment.author.name[0]}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="bg-accent rounded-lg px-3 py-2">
-                        <p className="font-semibold text-sm">{comment.author.name}</p>
-                        <p className="text-sm text-foreground">{comment.content}</p>
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1 ml-3">
-                        {formatDistanceToNow(comment.createdAt, { addSuffix: true })}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-
-            {/* Comment Input */}
-            <CommentInput postId={post.id} onComment={handleAddComment} />
-          </div>
+          <CommentList
+            postId={post.id}
+            comments={post.comments}
+            onAddComment={handleAddComment}
+          />
         )}
       </CardContent>
     </Card>

@@ -4,11 +4,11 @@ import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
 import { PostCard } from '@/components/post/PostCard'
 import { PostEditor } from '@/components/post/PostEditor'
-import type { Post } from '@/types/post'
+import type { Post, Comment } from '@/types/post'
 
 const Feed = () => {
   const { isAuthenticated, user } = useAuthStore()
-  const { posts, addPost, initializePosts } = usePostsStore()
+  const { posts, addPost, addComment, initializePosts } = usePostsStore()
 
   useEffect(() => {
     initializePosts()
@@ -31,6 +31,21 @@ const Feed = () => {
     addPost(newPost)
   }
 
+  const handleAddComment = (postId: string, content: string) => {
+    if (!user) return
+
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      postId,
+      author: user,
+      content,
+      createdAt: new Date(),
+      reactions: []
+    }
+
+    addComment(postId, newComment)
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -48,7 +63,7 @@ const Feed = () => {
 
         <div className="space-y-4">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
+            <PostCard key={post.id} post={post} onAddComment={handleAddComment} />
           ))}
         </div>
       </div>
