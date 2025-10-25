@@ -1,9 +1,9 @@
 import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
 import { useAuthStore } from '@/stores/authStore'
 import { Smile, Image, Mic, Video } from 'lucide-react'
+import { RichTextEditor } from '@/components/editor/RichTextEditor'
 
 interface PostEditorProps {
   onPost: (content: string) => void
@@ -12,10 +12,9 @@ interface PostEditorProps {
 export function PostEditor({ onPost }: PostEditorProps) {
   const [content, setContent] = useState('')
   const { user, isAuthenticated } = useAuthStore()
-  const maxLength = 500
 
   const handleSubmit = () => {
-    if (!content.trim()) return
+    if (!content.trim() || content === '<p></p>') return
 
     // If not authenticated, open login modal (placeholder for now)
     if (!isAuthenticated) {
@@ -36,12 +35,10 @@ export function PostEditor({ onPost }: PostEditorProps) {
     <Card className="mb-6">
       <CardContent className="p-6">
         <div className="space-y-4">
-          <Textarea
+          <RichTextEditor
+            content={content}
+            onChange={setContent}
             placeholder={isAuthenticated ? `What's on your mind, ${user?.name}?` : "Share your travel stories..."}
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            className="min-h-24 resize-none"
-            maxLength={maxLength}
           />
 
           <div className="flex items-center justify-between">
@@ -81,10 +78,7 @@ export function PostEditor({ onPost }: PostEditorProps) {
             </div>
 
             <div className="flex items-center gap-3">
-              <span className="text-sm text-muted-foreground">
-                {content.length}/{maxLength}
-              </span>
-              <Button onClick={handleSubmit} disabled={!content.trim()}>
+              <Button onClick={handleSubmit} disabled={!content.trim() || content === '<p></p>'}>
                 Publish
               </Button>
             </div>

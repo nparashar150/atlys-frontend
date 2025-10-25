@@ -48,7 +48,10 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
         </div>
 
         {/* Post Content */}
-        <p className="text-foreground mb-4 leading-relaxed">{post.content}</p>
+        <div
+          className="text-foreground mb-4 leading-relaxed prose prose-sm max-w-none"
+          dangerouslySetInnerHTML={{ __html: post.content }}
+        />
 
         {/* Post Actions */}
         <div className="flex items-center gap-4 pt-4 border-t">
