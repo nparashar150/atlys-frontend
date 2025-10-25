@@ -29,11 +29,19 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
   }
 
   const handleCommentClick = () => {
-    setShowComments(!showComments)
+    requireAuth(() => {
+      setShowComments(!showComments)
+    })
   }
 
   const handleAddComment = (content: string) => {
     onAddComment(post.id, content)
+  }
+
+  const handleShare = () => {
+    requireAuth(() => {
+      alert('Share not implemented')
+    })
   }
 
   return (
@@ -131,6 +139,7 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
                 <Button
                   size="icon"
                   variant="ghost"
+                  onClick={handleShare}
                   className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
                   aria-label="Share post"
                 >
