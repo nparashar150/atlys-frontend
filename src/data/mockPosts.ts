@@ -1,11 +1,14 @@
 import type { Post, User } from '@/types/post'
 
-const MOCK_USER_NAMES = [
-  { name: 'Jane Doe', email: 'jane@example.com' },
-  { name: 'John Smith', email: 'john@example.com' },
-  { name: 'Sarah Johnson', email: 'sarah@example.com' },
-  { name: 'Mike Brown', email: 'mike@example.com' },
-  { name: 'Emily Davis', email: 'emily@example.com' },
+const MOCK_USERS = [
+  { name: 'Sarah Johnson', email: 'sarah@example.com', avatar: 'https://i.pravatar.cc/150?img=1' }, // Female
+  { name: 'Alex Martinez', email: 'alex@example.com', avatar: 'https://i.pravatar.cc/150?img=12' }, // Male
+  { name: 'Emily Chen', email: 'emily@example.com', avatar: 'https://i.pravatar.cc/150?img=5' }, // Female
+  { name: 'Marcus Brown', email: 'marcus@example.com', avatar: 'https://i.pravatar.cc/150?img=13' }, // Male
+  { name: 'Jessica Williams', email: 'jessica@example.com', avatar: 'https://i.pravatar.cc/150?img=10' }, // Female
+  { name: 'David Kim', email: 'david@example.com', avatar: 'https://i.pravatar.cc/150?img=15' }, // Male
+  { name: 'Priya Patel', email: 'priya@example.com', avatar: 'https://i.pravatar.cc/150?img=20' }, // Female
+  { name: 'James Anderson', email: 'james@example.com', avatar: 'https://i.pravatar.cc/150?img=33' }, // Male
 ]
 
 const MOCK_POST_SNIPPETS = [
@@ -44,15 +47,18 @@ function generateCombinedContent(index: number): string {
 
 /**
  * Generate mock users
- * @param count Number of users to generate (default: 5)
+ * @param count Number of users to generate (default: 8)
  */
-export function generateMockUsers(count: number = 5): User[] {
-  return Array.from({ length: count }, (_, i) => ({
-    id: String(i + 1),
-    email: MOCK_USER_NAMES[i % MOCK_USER_NAMES.length].email,
-    name: MOCK_USER_NAMES[i % MOCK_USER_NAMES.length].name,
-    avatar: `https://i.pravatar.cc/150?img=${(i % 70) + 1}`
-  }))
+export function generateMockUsers(count: number = 8): User[] {
+  return Array.from({ length: count }, (_, i) => {
+    const user = MOCK_USERS[i % MOCK_USERS.length]
+    return {
+      id: String(i + 1),
+      email: user.email,
+      name: user.name,
+      avatar: user.avatar
+    }
+  })
 }
 
 /**

@@ -1,35 +1,30 @@
-import { useAuthStore } from '@/stores/authStore'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { LoginIcon } from '@/components/icons'
 
 export function Header() {
-  const { user, isAuthenticated, logout } = useAuthStore()
+  const location = useLocation()
+
+  const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup'
 
   return (
-    <header className="border-b">
+    <header>
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
-        <Link to="/" className="text-xl font-bold hover:opacity-80 transition-opacity">
-          Atlys Feed
+        <Link to="/" className="text-lg font-bold hover:opacity-80 transition-opacity">
+          foo-rum
         </Link>
 
-        {isAuthenticated ? (
-          <div className="flex items-center gap-4">
-            <span className="text-sm">
-              Welcome, <span className="font-semibold">{user?.name}</span>
-            </span>
-            <Button variant="outline" size="sm" onClick={logout}>
-              Logout
-            </Button>
-          </div>
+        {isAuthPage ? (
+          <Button variant="ghost" asChild>
+            <Link to="/">Back to home</Link>
+          </Button>
         ) : (
-          <div className="flex gap-2">
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/signin">Sign In</Link>
-            </Button>
-            <Button size="sm" asChild>
-              <Link to="/signup">Sign Up</Link>
-            </Button>
-          </div>
+          <Button variant="ghost" asChild>
+            <Link to="/signin" className="flex items-center gap-2">
+              Login
+              <LoginIcon size={16} strokeWidth={2} />
+            </Link>
+          </Button>
         )}
       </div>
     </header>

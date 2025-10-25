@@ -58,7 +58,7 @@ const TOOLBAR_BUTTONS: ToolbarButtonConfig[] = [
   { icon: CodeIcon, action: (e) => e.chain().focus().toggleCodeBlock().run(), type: 'button' },
 ]
 
-const BUTTON_CLASSES = 'h-8 w-8 p-0 bg-inherit rounded-md hover:bg-white/90'
+const BUTTON_CLASSES = 'bg-inherit rounded-md hover:bg-white/90'
 const ICON_CLASSES = 'w-3.5 h-3.5 text-black/54'
 
 interface EditorToolbarProps {
@@ -77,7 +77,7 @@ const HeadingSelector = ({ editor }: { editor: Editor }) => {
 
   return (
     <Select onValueChange={handleHeadingChange} defaultValue="paragraph">
-      <SelectTrigger className="h-8 w-fit text-xs bg-white border-0">
+      <SelectTrigger className="size-8 w-fit text-xs bg-white border-0">
         <SelectValue placeholder="Paragraph" />
       </SelectTrigger>
       <SelectContent>
@@ -92,7 +92,7 @@ const HeadingSelector = ({ editor }: { editor: Editor }) => {
 }
 
 const ToolbarButton = ({ icon: Icon, action, editor }: { icon: LucideIcon; action: (editor: Editor) => void; editor: Editor }) => (
-  <Button size="sm" variant="ghost" onClick={() => action(editor)} className={BUTTON_CLASSES}>
+  <Button size="icon-sm" variant="ghost" onClick={() => action(editor)} className={BUTTON_CLASSES}>
     <Icon className={ICON_CLASSES} />
   </Button>
 )
@@ -102,7 +102,7 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <div className="px-2 flex items-center gap-1 flex-wrap bg-black/3 rounded-lg h-12 w-fit">
+      <div className="px-1 flex items-center gap-1 flex-wrap bg-black/3 rounded-lg h-11 w-fit">
         <HeadingSelector editor={editor} />
 
         {TOOLBAR_BUTTONS.map(({ icon, action, type }, index) => (

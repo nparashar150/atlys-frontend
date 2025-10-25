@@ -7,12 +7,15 @@ import { useNavigate, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { AtlysCard } from '@/components/ui/atlys-card'
+import { LoginIcon } from '@/components/icons'
 
 interface SignUpFormProps {
   onSuccess?: () => void
+  onToggleMode?: () => void
 }
 
-export function SignUpForm({ onSuccess }: SignUpFormProps) {
+export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
   const signup = useAuthStore(state => state.signup)
   const navigate = useNavigate()
   const [isLoading, setIsLoading] = useState(false)
@@ -37,67 +40,85 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-      <div className="space-y-2">
-        <Label htmlFor="identifier">Email or Username</Label>
-        <Input
-          id="identifier"
-          type="text"
-          placeholder="Choose a username or enter email"
-          autoComplete="username"
-          disabled={isLoading}
-          {...register('identifier')}
-        />
-        {errors.identifier && (
-          <p className="text-sm text-destructive">{errors.identifier.message}</p>
-        )}
-      </div>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <AtlysCard
+        body={
+          <div className="p-6">
+            {/* Center-aligned login icon */}
+            <div className="flex justify-center mb-2">
+              <div className="w-12 h-12 rounded-full bg-gray-100 flex items-center justify-center">
+                <LoginIcon size={24} strokeWidth={2} className="text-black " />
+              </div>
+            </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="password">Password</Label>
-        <Input
-          id="password"
-          type="password"
-          placeholder="Create a strong password"
-          autoComplete="new-password"
-          disabled={isLoading}
-          {...register('password')}
-        />
-        {errors.password && (
-          <p className="text-sm text-destructive">{errors.password.message}</p>
-        )}
-        <p className="text-xs text-muted-foreground">
-          Must be at least 8 characters
-        </p>
-      </div>
+            {/* Title and subtitle */}
+            <div className="text-center mb-8">
+              <h2 className="text-xl font-medium text-black/90 mb-2">Create an account to continue</h2>
+              <p className="text-sm text-black/50">Create an account to access all the features on this app</p>
+            </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="confirmPassword">Confirm Password</Label>
-        <Input
-          id="confirmPassword"
-          type="password"
-          placeholder="Re-enter your password"
-          autoComplete="new-password"
-          disabled={isLoading}
-          {...register('confirmPassword')}
-        />
-        {errors.confirmPassword && (
-          <p className="text-sm text-destructive">{errors.confirmPassword.message}</p>
-        )}
-      </div>
+            {/* Input fields */}
+            <div className="space-y-4 mb-6">
+              <div>
+                <Label htmlFor="identifier" className="block text-sm font-medium text-black/75 mb-2">
+                  Email
+                </Label>
+                <Input
+                  id="identifier"
+                  type="text"
+                  placeholder="Enter your email"
+                  autoComplete="username"
+                  disabled={isLoading}
+                  className="w-full h-11 bg-black/[0.03] border-black/10"
+                  {...register('identifier')}
+                />
+                {errors.identifier && (
+                  <p className="text-sm text-destructive mt-1">{errors.identifier.message}</p>
+                )}
+              </div>
 
-      <Button type="submit" className="w-full" disabled={isLoading}>
-        {isLoading ? 'Creating account...' : 'Sign Up'}
-      </Button>
+              <div>
+                <Label htmlFor="password" className="block text-sm font-medium text-black/75 mb-2">
+                  Password
+                </Label>
+                <Input
+                  id="password"
+                  type="password"
+                  placeholder="Choose a strong password"
+                  autoComplete="new-password"
+                  disabled={isLoading}
+                  className="w-full h-11 bg-black/[0.03] border-black/10"
+                  {...register('password')}
+                />
+                {errors.password && (
+                  <p className="text-sm text-destructive mt-1">{errors.password.message}</p>
+                )}
+              </div>
+            </div>
 
-      {!onSuccess && (
-        <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{' '}
-          <Link to="/signin" className="text-primary hover:underline font-medium">
-            Sign in
-          </Link>
-        </p>
-      )}
+            {/* Sign up button */}
+            <Button type="submit" className="w-full h-11 bg-[#5057EA] hover:bg-[#5057EA]/90 font-medium" disabled={isLoading}>
+              {isLoading ? 'Creating account...' : 'Continue'}
+            </Button>
+          </div>
+        }
+        footer={
+          <div className="px-6 py-3">
+            <p className="text-sm text-black/50 text-center">
+              Already have an account?{' '}
+              {onToggleMode ? (
+                <button type="button" onClick={onToggleMode} className="text-[#5057EA] font-medium">
+                  Login →
+                </button>
+              ) : (
+                <Link to="/signin" className="text-[#5057EA] font-medium">
+                  Login →
+                </Link>
+              )}
+            </p>
+          </div>
+        }
+      />
     </form>
   )
 }

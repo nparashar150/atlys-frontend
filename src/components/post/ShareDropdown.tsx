@@ -1,4 +1,5 @@
 import { Share2 } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,10 +23,13 @@ export function ShareDropdown({ postContent }: ShareDropdownProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <button className="flex items-center gap-2 text-muted-foreground hover:text-green-500 transition-colors py-2 px-3 rounded-md hover:bg-accent">
-          <Share2 className="w-4 h-4" />
-          <span className="text-sm">Share</span>
-        </button>
+        <Button
+          size="icon"
+          variant="ghost"
+          className="text-[#2F384C] hover:text-black transition-colors"
+        >
+          <Share2 size={18} strokeWidth={1.5} />
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         {shareLinks.map((link) => (
