@@ -12,23 +12,14 @@ export interface Comment {
   postId: string
   author: User
   content: string
-  createdAt: Date
-  reactions: Reaction[]
-}
-
-export interface Reaction {
-  emoji: string
-  count: number
-  users: string[]
+  createdAt: string
 }
 
 export interface Post {
   id: string
   content: string
   author: User
-  createdAt: Date
-  likes: number
-  likedBy: string[]
+  createdAt: string
+  emoji: string
   comments: Comment[]
-  media: Media[]
 }

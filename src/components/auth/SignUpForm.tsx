@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signUpSchema, type SignUpFormData } from '@/lib/validations'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuth } from '@/hooks'
 import { useNavigate, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,34 +15,32 @@ interface SignUpFormProps {
 }
 
 export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
-  const signup = useAuthStore(state => state.signup)
+  const { mutations } = useAuth()
   const navigate = useNavigate()
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema)
   })
 
-  const onSubmit = async (data: SignUpFormData) => {
-    setIsLoading(true)
-    setError('')
-
-    // Simulate API delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    try {
-      signup(data.identifier, data.password)
-      onSuccess?.()
-      if (!onSuccess) {
-        navigate('/')
+  const onSubmit = (data: SignUpFormData) => {
+    mutations.signup.mutate(
+      { identifier: data.identifier, password: data.password },
+      {
+        onSuccess: (response) => {
+          if (response.success) {
+            onSuccess?.()
+            if (!onSuccess) {
+              navigate('/')
+            }
+          }
+        }
       }
-    } catch (err) {
-      setError('Failed to create account. Please try again.')
-    } finally {
-      setIsLoading(false)
-    }
+    )
   }
+
+  const errorMessage = mutations.signup.error
+    ? 'Failed to create account. Please try again.'
+    : null
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} aria-label="Sign up form">
@@ -74,7 +71,7 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
                   type="text"
                   placeholder="Enter your email"
                   autoComplete="username"
-                  disabled={isLoading}
+                  disabled={mutations.signup.isPending}
                   aria-label="Email"
                   aria-invalid={!!errors.identifier}
                   aria-describedby={errors.identifier ? "identifier-error" : undefined}
@@ -97,7 +94,7 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
                   type="password"
                   placeholder="Choose a strong password"
                   autoComplete="new-password"
-                  disabled={isLoading}
+                  disabled={mutations.signup.isPending}
                   aria-label="Password"
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? "password-error" : undefined}
@@ -112,9 +109,9 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
               </div>
             </div>
 
-            {error && (
+            {errorMessage && (
               <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md mb-4" role="alert" aria-live="polite">
-                {error}
+                {errorMessage}
               </div>
             )}
 
@@ -122,10 +119,10 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
             <Button
               type="submit"
               className="w-full h-11 bg-[#5057EA] hover:bg-[#5057EA]/90 font-medium"
-              disabled={isLoading}
-              aria-label={isLoading ? 'Creating account' : 'Create account'}
+              disabled={mutations.signup.isPending}
+              aria-label={mutations.signup.isPending ? 'Creating account' : 'Create account'}
             >
-              {isLoading ? 'Creating account...' : 'Continue'}
+              {mutations.signup.isPending ? 'Creating account...' : 'Continue'}
             </Button>
           </div>
         }

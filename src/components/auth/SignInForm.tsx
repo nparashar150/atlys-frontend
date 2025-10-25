@@ -1,8 +1,7 @@
-import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { signInSchema, type SignInFormData } from '@/lib/validations'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuth } from '@/hooks'
 import { useNavigate, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -16,35 +15,34 @@ interface SignInFormProps {
 }
 
 export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
-  const login = useAuthStore(state => state.login)
+  const { mutations } = useAuth()
   const navigate = useNavigate()
-  const [error, setError] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema)
   })
 
-  const onSubmit = async (data: SignInFormData) => {
-    setIsLoading(true)
-    setError('')
-
-    // Simulate API delay for better UX
-    await new Promise(resolve => setTimeout(resolve, 500))
-
-    const result = login(data.identifier, data.password)
-
-    if (result.success) {
-      onSuccess?.()
-      if (!onSuccess) {
-        navigate('/')
+  const onSubmit = (data: SignInFormData) => {
+    mutations.login.mutate(
+      { identifier: data.identifier, password: data.password },
+      {
+        onSuccess: (response) => {
+          if (response.success) {
+            onSuccess?.()
+            if (!onSuccess) {
+              navigate('/')
+            }
+          }
+        }
       }
-    } else {
-      setError(result.error || 'Login failed')
-    }
-
-    setIsLoading(false)
+    )
   }
+
+  const errorMessage = mutations.login.data?.success === false
+    ? mutations.login.data.error
+    : mutations.login.error
+    ? 'An unexpected error occurred. Please try again.'
+    : null
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} aria-label="Sign in form">
@@ -75,7 +73,7 @@ export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
                   type="text"
                   placeholder="Enter your email or username"
                   autoComplete="username"
-                  disabled={isLoading}
+                  disabled={mutations.login.isPending}
                   aria-label="Email or username"
                   aria-invalid={!!errors.identifier}
                   aria-describedby={errors.identifier ? "identifier-error" : undefined}
@@ -98,7 +96,7 @@ export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
                   type="password"
                   placeholder="Enter your password"
                   autoComplete="current-password"
-                  disabled={isLoading}
+                  disabled={mutations.login.isPending}
                   aria-label="Password"
                   aria-invalid={!!errors.password}
                   aria-describedby={errors.password ? "password-error" : undefined}
@@ -113,9 +111,9 @@ export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
               </div>
             </div>
 
-            {error && (
+            {errorMessage && (
               <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md mb-4" role="alert" aria-live="polite">
-                {error}
+                {errorMessage}
               </div>
             )}
 
@@ -123,10 +121,10 @@ export function SignInForm({ onSuccess, onToggleMode }: SignInFormProps) {
             <Button
               type="submit"
               className="w-full h-11 bg-[#5057EA] hover:bg-[#5057EA]/90 font-medium"
-              disabled={isLoading}
-              aria-label={isLoading ? 'Signing in' : 'Sign in'}
+              disabled={mutations.login.isPending}
+              aria-label={mutations.login.isPending ? 'Signing in' : 'Sign in'}
             >
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {mutations.login.isPending ? 'Signing in...' : 'Sign In'}
             </Button>
           </div>
         }

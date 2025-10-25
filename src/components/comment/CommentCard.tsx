@@ -9,7 +9,7 @@ interface CommentCardProps {
 export function CommentCard({ comment }: CommentCardProps) {
   return (
     <div className="flex gap-3 py-3">
-      <Avatar className="w-8 h-8">
+      <Avatar className="w-8 h-8 rounded-lg">
         <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
         <AvatarFallback>{comment.author.name[0]}</AvatarFallback>
       </Avatar>

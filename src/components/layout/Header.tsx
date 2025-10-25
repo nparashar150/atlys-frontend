@@ -1,11 +1,19 @@
-import { Link, useLocation } from 'react-router-dom'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-import { LoginIcon } from '@/components/icons'
+import { LoginIcon, LogoutIcon } from '@/components/icons'
+import { useAuthStore } from '@/stores/authStore'
 
 export function Header() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { isAuthenticated, logout } = useAuthStore()
 
   const isAuthPage = location.pathname === '/signin' || location.pathname === '/signup'
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
 
   return (
     <header>
@@ -17,6 +25,11 @@ export function Header() {
         {isAuthPage ? (
           <Button variant="ghost" asChild>
             <Link to="/">Back to home</Link>
+          </Button>
+        ) : isAuthenticated ? (
+          <Button variant="ghost" onClick={handleLogout} className="flex items-center gap-2">
+            Logout
+            <LogoutIcon size={16} strokeWidth={2} />
           </Button>
         ) : (
           <Button variant="ghost" asChild>

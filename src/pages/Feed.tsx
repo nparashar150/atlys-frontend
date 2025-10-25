@@ -1,49 +1,19 @@
-import { useEffect } from 'react'
 import { Header } from '@/components/layout/Header'
 import { useAuthStore } from '@/stores/authStore'
-import { usePostsStore } from '@/stores/postsStore'
+import { usePosts } from '@/hooks'
 import { PostCard } from '@/components/post/PostCard'
 import { PostEditor } from '@/components/post/PostEditor'
-import type { Post, Comment } from '@/types'
 
 export function Feed() {
   const { isAuthenticated, user } = useAuthStore()
-  const { posts, addPost, addComment, initializePosts } = usePostsStore()
-
-  useEffect(() => {
-    initializePosts()
-  }, [initializePosts])
+  const { query, mutations } = usePosts()
 
   const handleCreatePost = (content: string) => {
-    if (!user) return
-
-    const newPost: Post = {
-      id: Date.now().toString(),
-      content,
-      author: user,
-      createdAt: new Date(),
-      likes: 0,
-      likedBy: [],
-      comments: [],
-      media: []
-    }
-
-    addPost(newPost)
+    mutations.create.mutate(content)
   }
 
   const handleAddComment = (postId: string, content: string) => {
-    if (!user) return
-
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      postId,
-      author: user,
-      content,
-      createdAt: new Date(),
-      reactions: []
-    }
-
-    addComment(postId, newComment)
+    mutations.createComment.mutate({ postId, content })
   }
 
   return (
@@ -51,7 +21,6 @@ export function Feed() {
       <Header />
       <div className="container mx-auto max-w-2xl py-6 px-4">
         <div className="mb-6">
-          <h1 className="text-xl font-bold mb-3">Feed</h1>
           {isAuthenticated && (
             <p className="text-sm text-muted-foreground">
               Welcome back, {user?.name}! 👋
@@ -61,15 +30,29 @@ export function Feed() {
 
         <PostEditor onPost={handleCreatePost} />
 
-        <div className="space-y-10 mt-20">
-          {posts.map((post) => (
-            <PostCard
-              key={post.id}
-              post={post}
-              onAddComment={handleAddComment}
-            />
-          ))}
-        </div>
+        {query.isLoading && (
+          <div className="text-center py-8 text-muted-foreground">
+            Loading posts...
+          </div>
+        )}
+
+        {query.isError && (
+          <div className="text-center py-8 text-destructive">
+            Failed to load posts. Please try again.
+          </div>
+        )}
+
+        {query.isSuccess && (
+          <div className="space-y-10 mt-20">
+            {query.data.map((post) => (
+              <PostCard
+                key={post.id}
+                post={post}
+                onAddComment={handleAddComment}
+              />
+            ))}
+          </div>
+        )}
       </div>
     </div>
   )

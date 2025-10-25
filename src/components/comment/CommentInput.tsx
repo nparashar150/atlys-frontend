@@ -36,7 +36,7 @@ export function CommentInput({ postId, onComment }: CommentInputProps) {
             }
           }}
         />
-        <Button onClick={handleSubmit} disabled={!content.trim()} size="sm">
+        <Button onClick={handleSubmit} disabled={!content.trim()}>
           Comment
         </Button>
       </div>

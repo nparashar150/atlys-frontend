@@ -56,7 +56,7 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
 
               {/* Row 2: Reaction Emoji and Post Content */}
               <div className="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center text-base self-start justify-self-center">
-                💭
+                {post.emoji}
               </div>
               <div className="w-1" />
               <div
