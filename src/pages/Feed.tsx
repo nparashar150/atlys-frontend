@@ -63,7 +63,11 @@ const Feed = () => {
 
         <div className="space-y-4">
           {posts.map((post) => (
-            <PostCard key={post.id} post={post} onAddComment={handleAddComment} />
+            <PostCard
+              key={post.id}
+              post={post}
+              onAddComment={handleAddComment}
+            />
           ))}
         </div>
       </div>

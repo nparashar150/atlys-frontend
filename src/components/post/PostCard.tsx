@@ -5,6 +5,9 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { Heart, MessageCircle, Share2 } from 'lucide-react'
 import { CommentList } from '@/components/comment/CommentList'
+import { AuthModal } from '@/components/auth/AuthModal'
+import { ShareDropdown } from './ShareDropdown'
+import { useAuthStore } from '@/stores/authStore'
 
 interface PostCardProps {
   post: Post
@@ -13,8 +16,14 @@ interface PostCardProps {
 
 export function PostCard({ post, onAddComment }: PostCardProps) {
   const [showComments, setShowComments] = useState(false)
+  const [authModalOpen, setAuthModalOpen] = useState(false)
+  const { isAuthenticated } = useAuthStore()
 
   const handleLike = () => {
+    if (!isAuthenticated) {
+      setAuthModalOpen(true)
+      return
+    }
     alert('Like not implemented')
   }
 
@@ -24,10 +33,6 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
 
   const handleAddComment = (content: string) => {
     onAddComment(post.id, content)
-  }
-
-  const handleShare = () => {
-    alert('Share not implemented')
   }
 
   return (
@@ -71,13 +76,7 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
             <span className="text-sm">{post.comments.length}</span>
           </button>
 
-          <button
-            onClick={handleShare}
-            className="flex items-center gap-2 text-muted-foreground hover:text-green-500 transition-colors py-2 px-3 rounded-md hover:bg-accent"
-          >
-            <Share2 className="w-4 h-4" />
-            <span className="text-sm">Share</span>
-          </button>
+          <ShareDropdown postContent={post.content} />
         </div>
 
         {/* Comments Section */}
@@ -89,6 +88,8 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
           />
         )}
       </CardContent>
+
+      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </Card>
   )
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { useAuthStore } from '@/stores/authStore'
+import { AuthModal } from '@/components/auth/AuthModal'
 
 interface CommentInputProps {
   postId: string
@@ -10,15 +11,14 @@ interface CommentInputProps {
 
 export function CommentInput({ postId, onComment }: CommentInputProps) {
   const [content, setContent] = useState('')
+  const [authModalOpen, setAuthModalOpen] = useState(false)
   const { isAuthenticated } = useAuthStore()
 
   const handleSubmit = () => {
     if (!content.trim()) return
 
-    // If not authenticated, open sign-in modal
     if (!isAuthenticated) {
-      alert('Please sign in to comment')
-      // TODO: Open sign-in modal instead of alert
+      setAuthModalOpen(true)
       return
     }
 
@@ -27,22 +27,26 @@ export function CommentInput({ postId, onComment }: CommentInputProps) {
   }
 
   return (
-    <div className="flex gap-2">
-      <Input
-        placeholder="Write a comment..."
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
-        className="flex-1"
-        onKeyDown={(e) => {
-          if (e.key === 'Enter' && !e.shiftKey) {
-            e.preventDefault()
-            handleSubmit()
-          }
-        }}
-      />
-      <Button onClick={handleSubmit} disabled={!content.trim()} size="sm">
-        Comment
-      </Button>
-    </div>
+    <>
+      <div className="flex gap-2">
+        <Input
+          placeholder="Write a comment..."
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+          className="flex-1"
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+              e.preventDefault()
+              handleSubmit()
+            }
+          }}
+        />
+        <Button onClick={handleSubmit} disabled={!content.trim()} size="sm">
+          Comment
+        </Button>
+      </div>
+
+      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
+    </>
   )
 }
