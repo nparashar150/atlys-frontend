@@ -18,6 +18,7 @@ interface SignUpFormProps {
 export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
   const signup = useAuthStore(state => state.signup)
   const navigate = useNavigate()
+  const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
 
   const { register, handleSubmit, formState: { errors } } = useForm<SignUpFormData>({
@@ -26,17 +27,22 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
 
   const onSubmit = async (data: SignUpFormData) => {
     setIsLoading(true)
+    setError('')
 
     // Simulate API delay for better UX
     await new Promise(resolve => setTimeout(resolve, 500))
 
-    signup(data.identifier, data.password)
-    onSuccess?.()
-    if (!onSuccess) {
-      navigate('/')
+    try {
+      signup(data.identifier, data.password)
+      onSuccess?.()
+      if (!onSuccess) {
+        navigate('/')
+      }
+    } catch (err) {
+      setError('Failed to create account. Please try again.')
+    } finally {
+      setIsLoading(false)
     }
-
-    setIsLoading(false)
   }
 
   return (
@@ -95,6 +101,12 @@ export function SignUpForm({ onSuccess, onToggleMode }: SignUpFormProps) {
                 )}
               </div>
             </div>
+
+            {error && (
+              <div className="p-3 text-sm text-destructive bg-destructive/10 rounded-md mb-4">
+                {error}
+              </div>
+            )}
 
             {/* Sign up button */}
             <Button type="submit" className="w-full h-11 bg-[#5057EA] hover:bg-[#5057EA]/90 font-medium" disabled={isLoading}>

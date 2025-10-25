@@ -1,4 +1,4 @@
-import type { Post, User } from '@/types/post'
+import type { Post, User } from '@/types'
 
 const MOCK_USERS = [
   { name: 'Sarah Johnson', email: 'sarah@example.com', avatar: 'https://i.pravatar.cc/150?img=1' }, // Female

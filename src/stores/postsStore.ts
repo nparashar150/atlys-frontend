@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import type { Post, Comment } from '@/types/post'
+import type { Post, Comment } from '@/types'
 import { getDefaultMockPosts } from '@/data/mockPosts'
 
 interface PostsStore {

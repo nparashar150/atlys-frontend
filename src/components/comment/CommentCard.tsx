@@ -1,4 +1,4 @@
-import type { Comment } from '@/types/post'
+import type { Comment } from '@/types'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { formatDistanceToNow } from 'date-fns'
 

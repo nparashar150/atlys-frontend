@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { AtlysCard } from '@/components/ui/atlys-card'
 import { Button } from '@/components/ui/button'
-import { useAuthStore } from '@/stores/authStore'
 import { Plus } from 'lucide-react'
 import { RichTextEditor } from '@/components/editor/RichTextEditor'
-import { AuthModal } from '@/components/auth/AuthModal'
+import { useAuthModal } from '@/hooks'
 import { MicrophoneIcon, VideoRecordIcon, SendIcon } from '@/components/icons'
 
 interface PostEditorProps {
@@ -13,19 +12,15 @@ interface PostEditorProps {
 
 export function PostEditor({ onPost }: PostEditorProps) {
   const [content, setContent] = useState('')
-  const [authModalOpen, setAuthModalOpen] = useState(false)
-  const { user, isAuthenticated } = useAuthStore()
+  const { requireAuth, AuthModalComponent } = useAuthModal()
 
   const handleSubmit = () => {
     if (!content.trim() || content === '<p></p>') return
 
-    if (!isAuthenticated) {
-      setAuthModalOpen(true)
-      return
-    }
-
-    onPost(content)
-    setContent('')
+    requireAuth(() => {
+      onPost(content)
+      setContent('')
+    })
   }
 
   const handlePlaceholderClick = () => {
@@ -92,7 +87,7 @@ export function PostEditor({ onPost }: PostEditorProps) {
         </div>
       </AtlysCard>
 
-      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
+      <AuthModalComponent />
     </>
   )
 }

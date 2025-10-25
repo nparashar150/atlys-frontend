@@ -1,12 +1,11 @@
 import { useState } from 'react'
 import { formatDistanceToNow } from 'date-fns'
-import type { Post } from '@/types/post'
+import type { Post } from '@/types'
 import { AtlysCard } from '@/components/ui/atlys-card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { CommentList } from '@/components/comment/CommentList'
-import { AuthModal } from '@/components/auth/AuthModal'
-import { useAuthStore } from '@/stores/authStore'
+import { useAuthModal } from '@/hooks'
 import { HeartIcon, CommentIcon, SendShareIcon } from '@/components/icons'
 
 interface PostCardProps {
@@ -16,15 +15,12 @@ interface PostCardProps {
 
 export function PostCard({ post, onAddComment }: PostCardProps) {
   const [showComments, setShowComments] = useState(false)
-  const [authModalOpen, setAuthModalOpen] = useState(false)
-  const { isAuthenticated } = useAuthStore()
+  const { requireAuth, AuthModalComponent } = useAuthModal()
 
   const handleLike = () => {
-    if (!isAuthenticated) {
-      setAuthModalOpen(true)
-      return
-    }
-    alert('Like not implemented')
+    requireAuth(() => {
+      alert('Like not implemented')
+    })
   }
 
   const handleCommentClick = () => {
@@ -110,7 +106,7 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
         }
       />
 
-      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
+      <AuthModalComponent />
     </>
   )
 }

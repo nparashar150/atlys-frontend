@@ -1,13 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import { authService } from '@/services/authService'
-
-interface User {
-  id: string
-  email: string
-  name: string
-  avatar: string
-}
+import type { User } from '@/types'
 
 interface AuthStore {
   user: User | null

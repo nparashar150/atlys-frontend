@@ -1,4 +1,4 @@
-import type { Comment } from '@/types/post'
+import type { Comment } from '@/types'
 import { CommentCard } from './CommentCard'
 import { CommentInput } from './CommentInput'
 import { Separator } from '@/components/ui/separator'
@@ -11,9 +11,7 @@ interface CommentListProps {
 
 export function CommentList({ postId, comments, onAddComment }: CommentListProps) {
   return (
-    <div className="mt-4">
-      <Separator className="mb-4" />
-
+    <div>
       {comments.length === 0 ? (
         <div className="space-y-3">
           <p className="text-sm text-muted-foreground text-center py-2">

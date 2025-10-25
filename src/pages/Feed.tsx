@@ -4,9 +4,9 @@ import { useAuthStore } from '@/stores/authStore'
 import { usePostsStore } from '@/stores/postsStore'
 import { PostCard } from '@/components/post/PostCard'
 import { PostEditor } from '@/components/post/PostEditor'
-import type { Post, Comment } from '@/types/post'
+import type { Post, Comment } from '@/types'
 
-const Feed = () => {
+export function Feed() {
   const { isAuthenticated, user } = useAuthStore()
   const { posts, addPost, addComment, initializePosts } = usePostsStore()
 
@@ -74,5 +74,3 @@ const Feed = () => {
     </div>
   )
 }
-
-export default Feed

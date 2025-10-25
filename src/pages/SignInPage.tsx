@@ -1,7 +1,7 @@
 import { SignInForm } from '@/components/auth/SignInForm'
 import { Header } from '@/components/layout/Header'
 
-const SignInPage = () => {
+export function SignInPage() {
   return (
     <div className="min-h-screen bg-background flex flex-col">
       <Header />
@@ -13,5 +13,3 @@ const SignInPage = () => {
     </div>
   )
 }
-
-export default SignInPage

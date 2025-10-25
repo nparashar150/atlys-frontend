@@ -1,11 +1,5 @@
 import { DEMO_ACCOUNTS } from '@/config/auth.config'
-
-interface User {
-  id: string
-  email: string
-  name: string
-  avatar: string
-}
+import type { User } from '@/types'
 
 interface AuthResponse {
   success: boolean

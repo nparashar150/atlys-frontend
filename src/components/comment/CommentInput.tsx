@@ -1,8 +1,7 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useAuthStore } from '@/stores/authStore'
-import { AuthModal } from '@/components/auth/AuthModal'
+import { useAuthModal } from '@/hooks'
 
 interface CommentInputProps {
   postId: string
@@ -11,19 +10,15 @@ interface CommentInputProps {
 
 export function CommentInput({ postId, onComment }: CommentInputProps) {
   const [content, setContent] = useState('')
-  const [authModalOpen, setAuthModalOpen] = useState(false)
-  const { isAuthenticated } = useAuthStore()
+  const { requireAuth, AuthModalComponent } = useAuthModal()
 
   const handleSubmit = () => {
     if (!content.trim()) return
 
-    if (!isAuthenticated) {
-      setAuthModalOpen(true)
-      return
-    }
-
-    onComment(content)
-    setContent('')
+    requireAuth(() => {
+      onComment(content)
+      setContent('')
+    })
   }
 
   return (
@@ -46,7 +41,7 @@ export function CommentInput({ postId, onComment }: CommentInputProps) {
         </Button>
       </div>
 
-      <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
+      <AuthModalComponent />
     </>
   )
 }

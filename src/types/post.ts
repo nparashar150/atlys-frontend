@@ -1,9 +1,4 @@
-export interface User {
-  id: string
-  email: string
-  name: string
-  avatar: string
-}
+import type { User } from './user'
 
 export interface Media {
   type: 'image' | 'audio' | 'video' | 'file'

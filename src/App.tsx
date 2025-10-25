@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
-import Feed from '@/pages/Feed'
-import SignInPage from '@/pages/SignInPage'
-import SignUpPage from '@/pages/SignUpPage'
+import { Feed } from '@/pages/Feed'
+import { SignInPage } from '@/pages/SignInPage'
+import { SignUpPage } from '@/pages/SignUpPage'
 
-function App() {
+export function App() {
   return (
     <BrowserRouter>
       <Routes>
@@ -14,5 +14,3 @@ function App() {
     </BrowserRouter>
   )
 }
-
-export default App
