@@ -2,6 +2,7 @@ import type { Editor } from '@tiptap/react'
 import type { LucideIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Bold, Italic, Underline, List, ListOrdered, Quote, Code, Heading1, Heading2 } from 'lucide-react'
+import { EmojiPickerButton } from './EmojiPicker'
 
 interface ToolbarButtonConfig {
   icon: LucideIcon
@@ -38,6 +39,8 @@ export function EditorToolbar({ editor }: EditorToolbarProps) {
           </Button>
         </div>
       ))}
+      <div className="w-px bg-border mx-1" />
+      <EmojiPickerButton editor={editor} />
     </div>
   )
 }

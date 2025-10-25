@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/stores/authStore'
-import { Smile, Image, Mic, Video } from 'lucide-react'
+import { Image, Mic, Video } from 'lucide-react'
 import { RichTextEditor } from '@/components/editor/RichTextEditor'
 
 interface PostEditorProps {
@@ -43,14 +43,6 @@ export function PostEditor({ onPost }: PostEditorProps) {
 
           <div className="flex items-center justify-between">
             <div className="flex gap-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handlePlaceholderClick}
-                className="text-muted-foreground"
-              >
-                <Smile className="w-4 h-4" />
-              </Button>
               <Button
                 variant="ghost"
                 size="sm"
