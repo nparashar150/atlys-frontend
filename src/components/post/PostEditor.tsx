@@ -1,10 +1,11 @@
 import { useState } from 'react'
-import { Card, CardContent } from '@/components/ui/card'
+import { AtlysCard } from '@/components/ui/atlys-card'
 import { Button } from '@/components/ui/button'
 import { useAuthStore } from '@/stores/authStore'
-import { Image, Mic, Video } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { RichTextEditor } from '@/components/editor/RichTextEditor'
 import { AuthModal } from '@/components/auth/AuthModal'
+import { MicrophoneIcon, VideoRecordIcon, SendIcon } from '@/components/icons'
 
 interface PostEditorProps {
   onPost: (content: string) => void
@@ -33,52 +34,63 @@ export function PostEditor({ onPost }: PostEditorProps) {
 
   return (
     <>
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="space-y-4">
-            <RichTextEditor
-              content={content}
-              onChange={setContent}
-              placeholder={isAuthenticated ? `What's on your mind, ${user?.name}?` : "Share your travel stories..."}
-            />
+      <AtlysCard className="p-0 overflow-hidden gap-0">
+        {/* Editor with padding for content area */}
+        <div className="p-2">
+          <RichTextEditor
+            content={content}
+            onChange={setContent}
+            placeholder="How are you feeling today?"
+          />
+        </div>
 
-            <div className="flex items-center justify-between">
-              <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handlePlaceholderClick}
-                  className="text-muted-foreground"
-                >
-                  <Image className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handlePlaceholderClick}
-                  className="text-muted-foreground"
-                >
-                  <Mic className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={handlePlaceholderClick}
-                  className="text-muted-foreground"
-                >
-                  <Video className="w-4 h-4" />
-                </Button>
-              </div>
+        {/* Full-width separator */}
+        <div className="w-full h-px bg-black/10" />
 
-              <div className="flex items-center gap-3">
-                <Button onClick={handleSubmit} disabled={!content.trim() || content === '<p></p>'}>
-                  Publish
-                </Button>
-              </div>
-            </div>
+        {/* Footer section matching toolbar height */}
+        <div className="flex items-center justify-between px-2 h-12">
+          <div className="flex items-center gap-2">
+            {/* Plus button with circle background */}
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={handlePlaceholderClick}
+              className="bg-black/5 rounded-lg hover:bg-black/10"
+            >
+              <Plus className="w-4 h-4 text-black/60" />
+            </Button>
+
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={handlePlaceholderClick}
+              className="hover:bg-black/10"
+            >
+              <MicrophoneIcon className="w-4 h-4 text-black/60" />
+            </Button>
+
+            <Button
+              size="icon"
+              variant="ghost"
+              onClick={handlePlaceholderClick}
+              className="hover:bg-black/10"
+            >
+              <VideoRecordIcon className="w-4 h-4 text-black/60" />
+            </Button>
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Send button */}
+          <Button
+            size="icon"
+            variant="ghost"
+            onClick={handleSubmit}
+            disabled={!content.trim() || content === '<p></p>'}
+            className="hover:bg-black/10 disabled:opacity-50 p-0"
+          >
+            <SendIcon className="w-full h-full" color="#5057EA" />
+          </Button>
+        </div>
+      </AtlysCard>
 
       <AuthModal open={authModalOpen} onOpenChange={setAuthModalOpen} />
     </>

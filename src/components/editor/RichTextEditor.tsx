@@ -16,7 +16,8 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
       StarterKit,
       Underline,
       Placeholder.configure({
-        placeholder: placeholder || "What's on your mind?"
+        placeholder: placeholder || "What's on your mind?",
+        emptyEditorClass: 'is-editor-empty'
       })
     ],
     content,
@@ -25,13 +26,13 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
     },
     editorProps: {
       attributes: {
-        class: 'prose prose-sm max-w-none focus:outline-none min-h-[100px] p-4'
+        class: 'prose prose-sm max-w-none focus:outline-none min-h-30 max-h-60 overflow-y-auto p-4 text-sm'
       }
     }
   })
 
   return (
-    <div className="border rounded-md">
+    <div>
       <EditorToolbar editor={editor} />
       <EditorContent editor={editor} />
     </div>

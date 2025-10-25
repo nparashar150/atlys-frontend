@@ -49,11 +49,11 @@ const Feed = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="container mx-auto max-w-2xl py-8 px-4">
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Feed</h1>
+      <div className="container mx-auto max-w-2xl py-6 px-4">
+        <div className="mb-6">
+          <h1 className="text-xl font-bold mb-3">Feed</h1>
           {isAuthenticated && (
-            <p className="text-muted-foreground">
+            <p className="text-sm text-muted-foreground">
               Welcome back, {user?.name}! 👋
             </p>
           )}
@@ -61,7 +61,7 @@ const Feed = () => {
 
         <PostEditor onPost={handleCreatePost} />
 
-        <div className="space-y-4">
+        <div className="space-y-10 mt-20">
           {posts.map((post) => (
             <PostCard
               key={post.id}
