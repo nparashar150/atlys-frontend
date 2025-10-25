@@ -82,24 +82,25 @@ function generateComment(postId: string, commentIndex: number, hoursAgo: number)
   }
 }
 
-function generatePosts(): Post[] {
+function generatePosts(count: number, offset: number): Post[] {
   const posts: Post[] = []
 
-  for (let i = 0; i < 20; i++) {
-    const hoursAgo = (i + 1) * 6 // Spread posts over time
-    const author = generateUser(i % NAMES.length)
+  for (let i = 0; i < count; i++) {
+    const postIndex = offset + i
+    const hoursAgo = (postIndex + 1) * 6 // Spread posts over time
+    const author = generateUser(postIndex % NAMES.length)
 
     // Randomly decide how many comments (0-3)
     const commentCount = Math.random() < 0.45 ? 0 : Math.random() < 0.6 ? 1 : Math.random() < 0.8 ? 2 : 3
     const comments: Comment[] = []
 
     for (let j = 0; j < commentCount; j++) {
-      comments.push(generateComment((i + 1).toString(), i * 10 + j + 1, hoursAgo - (j + 1)))
+      comments.push(generateComment((postIndex + 1).toString(), postIndex * 10 + j + 1, hoursAgo - (j + 1)))
     }
 
     posts.push({
-      id: (i + 1).toString(),
-      content: `<p>${POST_CONTENTS[i]}</p>`,
+      id: (postIndex + 1).toString(),
+      content: `<p>${POST_CONTENTS[postIndex % POST_CONTENTS.length]}</p>`,
       author,
       createdAt: new Date(Date.now() - hoursAgo * 60 * 60 * 1000).toISOString(),
       emoji: getRandomEmoji(),
@@ -110,23 +111,55 @@ function generatePosts(): Post[] {
   return posts
 }
 
-const MOCK_POSTS = generatePosts()
+const MOCK_POSTS: Post[] = []
+const TOTAL_POSTS = 100
+const PAGE_SIZE = 10
+
+// Generate initial posts on demand
+function ensurePostsGenerated(upToIndex: number) {
+  while (MOCK_POSTS.length <= upToIndex && MOCK_POSTS.length < TOTAL_POSTS) {
+    const offset = MOCK_POSTS.length
+    const count = Math.min(PAGE_SIZE, TOTAL_POSTS - MOCK_POSTS.length)
+    MOCK_POSTS.push(...generatePosts(count, offset))
+  }
+}
 
 function randomDelay(): Promise<void> {
   const delay = Math.floor(Math.random() * (800 - 300 + 1)) + 300
   return new Promise(resolve => setTimeout(resolve, delay))
 }
 
-export async function fetchPosts(): Promise<Post[]> {
+export interface FetchPostsParams {
+  pageParam?: number
+}
+
+export interface FetchPostsResponse {
+  posts: Post[]
+  nextCursor: number | null
+}
+
+export async function fetchPosts({ pageParam = 0 }: FetchPostsParams): Promise<FetchPostsResponse> {
   await randomDelay()
-  return [...MOCK_POSTS]
+
+  const startIndex = pageParam
+  const endIndex = startIndex + PAGE_SIZE
+
+  ensurePostsGenerated(endIndex - 1)
+
+  const posts = MOCK_POSTS.slice(startIndex, endIndex)
+  const hasMore = endIndex < TOTAL_POSTS
+
+  return {
+    posts,
+    nextCursor: hasMore ? endIndex : null
+  }
 }
 
 export async function createPost(content: string, author: Post['author']): Promise<Post> {
   await randomDelay()
 
   const newPost: Post = {
-    id: Date.now().toString(),
+    id: `new-${Date.now()}`,
     content,
     author,
     createdAt: new Date().toISOString(),

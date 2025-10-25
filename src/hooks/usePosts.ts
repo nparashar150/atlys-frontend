@@ -1,5 +1,5 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { fetchPosts, createPost, createComment } from '@/api/posts.api'
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { fetchPosts, createPost, createComment, type FetchPostsResponse } from '@/api/posts.api'
 import { useAuthStore } from '@/stores/authStore'
 import type { Post } from '@/types'
 
@@ -7,9 +7,11 @@ export function usePosts() {
   const queryClient = useQueryClient()
   const user = useAuthStore(state => state.user)
 
-  const query = useQuery({
+  const query = useInfiniteQuery({
     queryKey: ['posts'],
-    queryFn: fetchPosts,
+    queryFn: ({ pageParam }) => fetchPosts({ pageParam }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) => lastPage.nextCursor,
     staleTime: 1000 * 60 * 5, // 5 minutes
   })
 
@@ -21,7 +23,7 @@ export function usePosts() {
     onMutate: async (content) => {
       await queryClient.cancelQueries({ queryKey: ['posts'] })
 
-      const previousPosts = queryClient.getQueryData<Post[]>(['posts'])
+      const previousData = queryClient.getQueryData<{ pages: FetchPostsResponse[]; pageParams: number[] }>(['posts'])
 
       if (user) {
         const optimisticPost: Post = {
@@ -33,17 +35,24 @@ export function usePosts() {
           comments: []
         }
 
-        queryClient.setQueryData<Post[]>(['posts'], (old = []) => [
-          optimisticPost,
-          ...old
-        ])
+        queryClient.setQueryData<{ pages: FetchPostsResponse[]; pageParams: number[] }>(['posts'], (old) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: old.pages.map((page, index) =>
+              index === 0
+                ? { ...page, posts: [optimisticPost, ...page.posts] }
+                : page
+            )
+          }
+        })
       }
 
-      return { previousPosts }
+      return { previousData }
     },
     onError: (_err, _content, context) => {
-      if (context?.previousPosts) {
-        queryClient.setQueryData(['posts'], context.previousPosts)
+      if (context?.previousData) {
+        queryClient.setQueryData(['posts'], context.previousData)
       }
     },
     onSettled: () => {
@@ -59,35 +68,42 @@ export function usePosts() {
     onMutate: async ({ postId, content }) => {
       await queryClient.cancelQueries({ queryKey: ['posts'] })
 
-      const previousPosts = queryClient.getQueryData<Post[]>(['posts'])
+      const previousData = queryClient.getQueryData<{ pages: FetchPostsResponse[]; pageParams: number[] }>(['posts'])
 
       if (user) {
-        queryClient.setQueryData<Post[]>(['posts'], (old = []) =>
-          old.map(post =>
-            post.id === postId
-              ? {
-                  ...post,
-                  comments: [
-                    ...post.comments,
-                    {
-                      id: `temp-${Date.now()}`,
-                      postId,
-                      content,
-                      author: user,
-                      createdAt: new Date().toISOString()
+        queryClient.setQueryData<{ pages: FetchPostsResponse[]; pageParams: number[] }>(['posts'], (old) => {
+          if (!old) return old
+          return {
+            ...old,
+            pages: old.pages.map(page => ({
+              ...page,
+              posts: page.posts.map(post =>
+                post.id === postId
+                  ? {
+                      ...post,
+                      comments: [
+                        ...post.comments,
+                        {
+                          id: `temp-${Date.now()}`,
+                          postId,
+                          content,
+                          author: user,
+                          createdAt: new Date().toISOString()
+                        }
+                      ]
                     }
-                  ]
-                }
-              : post
-          )
-        )
+                  : post
+              )
+            }))
+          }
+        })
       }
 
-      return { previousPosts }
+      return { previousData }
     },
     onError: (_err, _variables, context) => {
-      if (context?.previousPosts) {
-        queryClient.setQueryData(['posts'], context.previousPosts)
+      if (context?.previousData) {
+        queryClient.setQueryData(['posts'], context.previousData)
       }
     },
     onSettled: () => {
