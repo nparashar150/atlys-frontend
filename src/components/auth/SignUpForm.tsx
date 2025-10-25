@@ -44,6 +44,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           id="identifier"
           type="text"
           placeholder="Choose a username or enter email"
+          autoComplete="username"
           disabled={isLoading}
           {...register('identifier')}
         />
@@ -58,6 +59,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           id="password"
           type="password"
           placeholder="Create a strong password"
+          autoComplete="new-password"
           disabled={isLoading}
           {...register('password')}
         />
@@ -75,6 +77,7 @@ export function SignUpForm({ onSuccess }: SignUpFormProps) {
           id="confirmPassword"
           type="password"
           placeholder="Re-enter your password"
+          autoComplete="new-password"
           disabled={isLoading}
           {...register('confirmPassword')}
         />

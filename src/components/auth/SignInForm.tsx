@@ -51,6 +51,7 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
           id="identifier"
           type="text"
           placeholder="Enter your email or username"
+          autoComplete="username"
           disabled={isLoading}
           {...register('identifier')}
         />
@@ -65,6 +66,7 @@ export function SignInForm({ onSuccess }: SignInFormProps) {
           id="password"
           type="password"
           placeholder="Enter your password"
+          autoComplete="current-password"
           disabled={isLoading}
           {...register('password')}
         />
