@@ -2,6 +2,7 @@ import { Header } from '@/components/layout/Header'
 import { useAuthStore } from '@/stores/authStore'
 import { usePosts } from '@/hooks'
 import { PostCard } from '@/components/post/PostCard'
+import { PostCardSkeleton } from '@/components/post/PostCardSkeleton'
 import { PostEditor } from '@/components/post/PostEditor'
 
 export function Feed() {
@@ -31,8 +32,10 @@ export function Feed() {
         <PostEditor onPost={handleCreatePost} />
 
         {query.isLoading && (
-          <div className="text-center py-8 text-muted-foreground">
-            Loading posts...
+          <div className="space-y-10 mt-20">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <PostCardSkeleton key={i} />
+            ))}
           </div>
         )}
 
