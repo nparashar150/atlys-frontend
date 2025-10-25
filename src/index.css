@@ -129,6 +129,16 @@
   }
 }
 
+@layer utilities {
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* TipTap Editor Placeholder Styles */
 .ProseMirror p.is-editor-empty:first-child::before {
   color: rgba(0, 0, 0, 0.4);

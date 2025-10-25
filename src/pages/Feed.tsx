@@ -49,7 +49,7 @@ export function Feed() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <div className="container mx-auto max-w-2xl py-6 px-4">
+      <div className="container mx-auto max-w-2xl py-6 px-4 sm:px-6 w-full">
         <AnimatePresence mode="wait">
           {isAuthenticated && (
             <motion.div
