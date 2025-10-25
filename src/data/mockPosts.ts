@@ -8,7 +8,7 @@ const MOCK_USER_NAMES = [
   { name: 'Emily Davis', email: 'emily@example.com' },
 ]
 
-const MOCK_POST_CONTENTS = [
+const MOCK_POST_SNIPPETS = [
   'Just got my visa approved for Japan! 🇯🇵 Can\'t wait to explore Tokyo and Kyoto. Thanks for the smooth process!',
   'Finally exploring the streets of Paris! 🗼 The Eiffel Tower is even more beautiful in person. Travel dreams do come true!',
   'Landed in Bali this morning! 🌴 The beaches here are absolutely stunning. Best decision ever to take this trip.',
@@ -24,12 +24,23 @@ const MOCK_POST_CONTENTS = [
   'The Great Wall of China is surreal! 🏯 Standing here, you can feel the history. Absolutely worth the visit.',
   'Scuba diving in the Great Barrier Reef! 🐠 The underwater world is spectacular. Australia, you\'re amazing!',
   'Exploring the temples of Angkor Wat at sunrise 🛕 Cambodia is full of wonders. Spiritual and beautiful!',
-  'Road tripping through New Zealand! 🚗 Every turn reveals a new stunning landscape. Middle Earth is real!',
-  'The Northern Lights in Norway! 💚 Nature\'s most spectacular light show. Dreams do come true!',
-  'Exploring the souks of Dubai 🏙️ The blend of tradition and modernity is fascinating. What a city!',
-  'Island hopping in Greece! ⛵ Mykonos, Santorini, and Crete. Each island has its own magic.',
-  'Just finished an amazing trek to Everest Base Camp! 🏔️ Challenging but absolutely worth it. Nepal, you\'re incredible!',
 ]
+
+/**
+ * Combine 2-3 random snippets into a single post content
+ */
+function generateCombinedContent(index: number): string {
+  const snippetCount = 2 + (index % 5) // Alternates between 2 and 3 snippets
+  const startIndex = (index * 3) % MOCK_POST_SNIPPETS.length
+  const snippets: string[] = []
+
+  for (let i = 0; i < snippetCount; i++) {
+    const snippetIndex = (startIndex + i) % MOCK_POST_SNIPPETS.length
+    snippets.push(MOCK_POST_SNIPPETS[snippetIndex])
+  }
+
+  return snippets.join(' ')
+}
 
 /**
  * Generate mock users
@@ -58,7 +69,7 @@ export function generateMockPosts(count: number = 10): Post[] {
 
     return {
       id: String(i + 1),
-      content: MOCK_POST_CONTENTS[i % MOCK_POST_CONTENTS.length],
+      content: generateCombinedContent(i),
       author: users[i % users.length],
       createdAt,
       likes: Math.floor(Math.random() * 100),
