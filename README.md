@@ -1,75 +1,102 @@
-# React + TypeScript + Vite
+# Atlys Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern social media feed application built with React and TypeScript.
 
-Currently, two official plugins are available:
+## What I Built
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+| Feature | Description | Why |
+|---------|-------------|-----|
+| **Authentication** | Sign in/Sign up with modal system | Smooth UX with action resumption after login |
+| **Post Feed** | Infinite scrolling feed with posts | Core feature for content consumption |
+| **Rich Text Editor** | Tiptap-based markdown editor | Better content creation experience |
+| **Comments** | Nested comments on posts | User engagement |
+| **Reactions** | Like posts with animation | Interactive feedback |
+| **Emoji Picker** | Emoji support in posts/comments | Enhanced expression |
+| **Responsive Design** | Mobile-first approach | Accessibility across devices |
+| **Animations** | Framer Motion transitions | Polished UX |
 
-## React Compiler
+## Tech Stack
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+| Technology | Purpose |
+|------------|---------|
+| **React 19** | UI framework with latest features |
+| **TypeScript** | Type safety |
+| **Vite** | Fast build tool |
+| **TailwindCSS 4** | Styling with utility classes |
+| **TanStack Query** | Server state management & caching |
+| **Zustand** | Client state management |
+| **React Router** | Routing |
+| **Tiptap** | Rich text editing |
+| **Framer Motion** | Animations |
+| **React Hook Form + Zod** | Form handling & validation |
+| **Radix UI** | Accessible component primitives |
 
-Note: This will impact Vite dev & build performances.
+## Code Structure
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── api/              # API layer (auth, posts)
+├── components/       # React components
+│   ├── auth/        # Authentication forms
+│   ├── comment/     # Comment components
+│   ├── editor/      # Rich text editor
+│   ├── post/        # Post components
+│   └── ui/          # Reusable UI components
+├── config/          # App configuration
+├── hooks/           # Custom React hooks
+├── pages/           # Page components
+├── services/        # Business logic
+├── stores/          # Zustand stores
+├── types/           # TypeScript types
+└── utils/           # Helper functions
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+```bash
+# Install dependencies
+npm install
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+# Run development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Analyze bundle size
+npm run build:analyze
 ```
+
+## What Can Be Improved
+
+| Area | Improvement | How |
+|------|-------------|-----|
+| **Testing** | Add unit & integration tests | Jest + React Testing Library |
+| **Performance** | Optimize bundle size | Code splitting, tree shaking |
+| **Accessibility** | ARIA labels & keyboard nav | Audit with axe-devtools |
+| **Error Handling** | Better error boundaries | Implement global error handler |
+| **Caching** | Optimistic updates | Improve TanStack Query mutations |
+| **Real-time** | Live updates | WebSocket integration |
+| **Image Optimization** | Lazy loading images | Add intersection observer |
+| **PWA** | Offline support | Service worker implementation |
+| **Backend** | Real API integration | Replace mock API with actual backend |
+| **Security** | Sanitize user input | Already using DOMPurify, can enhance |
+
+## Key Features Implemented
+
+- Action resumption (login redirects back to intended action)
+- Optimistic UI updates for better perceived performance
+- Debounced API calls to reduce server load
+- Lazy loading for code splitting
+- Accessibility utilities (focus management, ARIA)
+- Error logging utility
+- Markdown shortcuts in editor (Cmd+B for bold, etc.)
+- Mobile-optimized responsive layout
+
+## Performance Optimizations
+
+- React 19 compiler for automatic memoization
+- Lazy route loading
+- Query result caching (5min stale time)
+- Reduced motion support for accessibility
+- Bundle analysis tooling included
