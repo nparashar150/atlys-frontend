@@ -7,6 +7,7 @@ import { PostCard } from '@/components/post/PostCard'
 import { PostCardSkeleton } from '@/components/post/PostCardSkeleton'
 import { PostEditor } from '@/components/post/PostEditor'
 import { getRandomEmoji } from '@/config/posts.config'
+import { UI_CONFIG } from '@/config/ui.config'
 
 export function Feed() {
   const { isAuthenticated, user } = useAuthStore()
@@ -22,18 +23,32 @@ export function Feed() {
     mutations.createComment.mutate({ postId, content })
   }
 
-  // Stable callback for intersection observer
+  /**
+   * Handles infinite scroll by triggering next page fetch when sentinel div is visible
+   *
+   * Checks four conditions before fetching:
+   * 1. Initial data has loaded (prevents fetch during page load)
+   * 2. Sentinel element is intersecting viewport (user scrolled to bottom)
+   * 3. More pages are available (hasNextPage)
+   * 4. Not currently fetching (prevents duplicate requests)
+   */
   const handleIntersection = useCallback((entries: IntersectionObserverEntry[]) => {
-    if (entries[0].isIntersecting && query.hasNextPage && !query.isFetchingNextPage) {
+    const sentinelIsVisible = entries[0].isIntersecting
+    const shouldFetchMore = query.isSuccess && query.hasNextPage && !query.isFetchingNextPage
+
+    if (sentinelIsVisible && shouldFetchMore) {
       query.fetchNextPage()
     }
-  }, [query.hasNextPage, query.isFetchingNextPage, query.fetchNextPage])
+  }, [query.isSuccess, query.hasNextPage, query.isFetchingNextPage, query.fetchNextPage])
 
   useEffect(() => {
     const currentTarget = observerTarget.current
     if (!currentTarget) return
 
-    const observer = new IntersectionObserver(handleIntersection, { threshold: 0.1 })
+    const observer = new IntersectionObserver(
+      handleIntersection,
+      { threshold: UI_CONFIG.INTERSECTION_OBSERVER.THRESHOLD }
+    )
     observer.observe(currentTarget)
 
     return () => {
@@ -88,8 +103,8 @@ export function Feed() {
             transition={{ duration: 0.3 }}
             className="space-y-10 mt-20"
           >
-            {Array.from({ length: 3 }).map((_, i) => (
-              <PostCardSkeleton key={i} />
+            {Array.from({ length: UI_CONFIG.LOADING.INITIAL_SKELETON_COUNT }).map((_, skeletonIndex) => (
+              <PostCardSkeleton key={`initial-skeleton-${skeletonIndex}`} />
             ))}
           </motion.div>
         )}
@@ -177,8 +192,8 @@ export function Feed() {
                     transition={{ duration: 0.3 }}
                     className="space-y-10 mt-10"
                   >
-                    {Array.from({ length: 2 }).map((_, i) => (
-                      <PostCardSkeleton key={`loading-${i}`} />
+                    {Array.from({ length: UI_CONFIG.LOADING.NEXT_PAGE_SKELETON_COUNT }).map((_, skeletonIndex) => (
+                      <PostCardSkeleton key={`next-page-skeleton-${skeletonIndex}`} />
                     ))}
                   </motion.div>
                 )}

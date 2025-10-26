@@ -1,5 +1,6 @@
 import type { Post, Comment, User } from '@/types'
 import { getRandomEmoji } from '@/config/posts.config'
+import { UI_CONFIG } from '@/config/ui.config'
 
 const NAMES = [
   'Sarah Johnson', 'Mike Chen', 'Emma Wilson', 'Alex Kumar', 'Lisa Park',
@@ -70,8 +71,21 @@ const COMMENT_CONTENTS = [
   'Did you get a guide or explore on your own?'
 ]
 
-function getRandomItem<T>(array: T[]): T {
-  return array[Math.floor(Math.random() * array.length)]
+/**
+ * Returns a random element from an array
+ *
+ * @template T - The type of array elements
+ * @param array - Source array (must be non-empty)
+ * @returns A randomly selected element
+ * @throws {Error} If array is empty
+ */
+function getRandomItem<T>(array: readonly T[]): T {
+  if (array.length === 0) {
+    throw new Error('Cannot get random item from empty array')
+  }
+
+  const randomIndex = Math.floor(Math.random() * array.length)
+  return array[randomIndex]
 }
 
 function generateUser(index: number): User {
@@ -96,20 +110,59 @@ function generateComment(postId: string, commentIndex: number, hoursAgo: number)
   }
 }
 
+/**
+ * Determines number of comments for a post using weighted randomization
+ *
+ * Distribution:
+ * - 45% chance: 0 comments (no engagement)
+ * - 15% chance: 1 comment (low engagement)
+ * - 20% chance: 2 comments (medium engagement)
+ * - 20% chance: 3 comments (high engagement)
+ *
+ * @returns Number of comments (0-3)
+ */
+function determineCommentCount(): number {
+  const randomValue = Math.random()
+  const { NO_COMMENTS, ONE_COMMENT, TWO_COMMENTS } = UI_CONFIG.MOCK_DATA.COMMENT_PROBABILITY
+
+  if (randomValue < NO_COMMENTS) return 0
+  if (randomValue < ONE_COMMENT) return 1
+  if (randomValue < TWO_COMMENTS) return 2
+  return 3
+}
+
+/**
+ * Generates mock posts with realistic content and metadata
+ *
+ * Creates posts with:
+ * - Authors distributed across NAMES array using modulo rotation
+ * - Timestamps spread 6 hours apart for realistic chronological ordering
+ * - 0-3 random comments per post (see determineCommentCount)
+ * - Content cycling through POST_CONTENTS array
+ * - Random emoji reactions
+ *
+ * @param count - Number of posts to generate
+ * @param offset - Starting index for post generation (used for pagination)
+ * @returns Array of generated Post objects with authors, content, and comments
+ */
 function generatePosts(count: number, offset: number): Post[] {
   const posts: Post[] = []
 
-  for (let i = 0; i < count; i++) {
-    const postIndex = offset + i
-    const hoursAgo = (postIndex + 1) * 6 // Spread posts over time
+  for (let postOffset = 0; postOffset < count; postOffset++) {
+    const postIndex = offset + postOffset
+    const hoursAgo = (postIndex + 1) * UI_CONFIG.MOCK_DATA.HOURS_BETWEEN_POSTS
     const author = generateUser(postIndex % NAMES.length)
 
-    // Randomly decide how many comments (0-3)
-    const commentCount = Math.random() < 0.45 ? 0 : Math.random() < 0.6 ? 1 : Math.random() < 0.8 ? 2 : 3
+    const commentCount = determineCommentCount()
     const comments: Comment[] = []
 
-    for (let j = 0; j < commentCount; j++) {
-      comments.push(generateComment((postIndex + 1).toString(), postIndex * 10 + j + 1, hoursAgo - (j + 1)))
+    for (let commentOffset = 0; commentOffset < commentCount; commentOffset++) {
+      const commentId = postIndex * 10 + commentOffset + 1
+      const commentHoursAgo = hoursAgo - (commentOffset + 1)
+
+      comments.push(
+        generateComment((postIndex + 1).toString(), commentId, commentHoursAgo)
+      )
     }
 
     posts.push({
@@ -126,10 +179,16 @@ function generatePosts(count: number, offset: number): Post[] {
 }
 
 const MOCK_POSTS: Post[] = []
-const TOTAL_POSTS = 100
-const PAGE_SIZE = 10
+const { TOTAL_POSTS, PAGE_SIZE } = UI_CONFIG.MOCK_DATA
 
-// Generate initial posts on demand
+/**
+ * Lazy-loads mock posts up to a specified index
+ *
+ * Generates posts on-demand rather than all upfront for better performance.
+ * Ensures posts exist up to the requested index by generating pages as needed.
+ *
+ * @param upToIndex - Generate posts up to and including this index
+ */
 function ensurePostsGenerated(upToIndex: number) {
   while (MOCK_POSTS.length <= upToIndex && MOCK_POSTS.length < TOTAL_POSTS) {
     const offset = MOCK_POSTS.length
@@ -138,8 +197,18 @@ function ensurePostsGenerated(upToIndex: number) {
   }
 }
 
+/**
+ * Simulates network latency with random delay
+ *
+ * Returns a promise that resolves after 300-800ms to simulate
+ * realistic API response times for development/testing
+ *
+ * @returns Promise that resolves after random delay
+ */
 function randomDelay(): Promise<void> {
-  const delay = Math.floor(Math.random() * (800 - 300 + 1)) + 300
+  const { MIN_MS, MAX_MS } = UI_CONFIG.DELAY
+  const delay = Math.floor(Math.random() * (MAX_MS - MIN_MS + 1)) + MIN_MS
+
   return new Promise(resolve => setTimeout(resolve, delay))
 }
 

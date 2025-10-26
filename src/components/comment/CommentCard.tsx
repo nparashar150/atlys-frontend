@@ -7,22 +7,39 @@ interface CommentCardProps {
 }
 
 export function CommentCard({ comment }: CommentCardProps) {
+  const formattedTime = formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })
+
   return (
-    <div className="flex gap-3 py-3">
+    <article
+      className="flex gap-3 py-3"
+      role="comment"
+      aria-label={`Comment by ${comment.author.name}`}
+    >
       <Avatar className="w-8 h-8 rounded-lg">
-        <AvatarImage src={comment.author.avatar} alt={comment.author.name} />
-        <AvatarFallback>{comment.author.name[0]}</AvatarFallback>
+        <AvatarImage
+          src={comment.author.avatar}
+          alt={`${comment.author.name}'s avatar`}
+        />
+        <AvatarFallback aria-label={comment.author.name}>
+          {comment.author.name[0]}
+        </AvatarFallback>
       </Avatar>
 
       <div className="flex-1">
-        <div className="flex items-center gap-2">
-          <span className="font-semibold text-sm">{comment.author.name}</span>
-          <span className="text-xs text-muted-foreground">
-            {formatDistanceToNow(new Date(comment.createdAt), { addSuffix: true })}
+        <header className="flex items-center gap-2">
+          <span className="font-semibold text-sm" aria-label="Comment author">
+            {comment.author.name}
           </span>
-        </div>
+          <time
+            className="text-xs text-muted-foreground"
+            dateTime={comment.createdAt}
+            aria-label={`Posted ${formattedTime}`}
+          >
+            {formattedTime}
+          </time>
+        </header>
         <p className="text-sm mt-1">{comment.content}</p>
       </div>
-    </div>
+    </article>
   )
 }

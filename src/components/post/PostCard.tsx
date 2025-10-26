@@ -7,7 +7,7 @@ import { AtlysCard } from '@/components/ui/atlys-card'
 import { Button } from '@/components/ui/button'
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar'
 import { AnimatedEmoji } from '@/components/ui/animated-emoji'
-import { Magnetic } from '@/components/ui/magnetic'
+import { AnimatedButtonWrapper } from '@/components/ui/animated-button-wrapper'
 import { CommentList } from '@/components/comment/CommentList'
 import { useAuthModal } from '@/hooks'
 import { HeartIcon, CommentIcon, SendShareIcon } from '@/components/icons'
@@ -106,50 +106,48 @@ export function PostCard({ post, onAddComment }: PostCardProps) {
         footer={
           <div className="px-2">
             <div className="flex items-center gap-2">
-              <Magnetic strength={0.2}>
-                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
-                  <Button
-                    size="icon"
-                    variant="ghost"
-                    onClick={handleLike}
-                    className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
-                    aria-label="Like post"
+              <AnimatedButtonWrapper>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={handleLike}
+                  className="text-brand-text-secondary hover:text-black transition-colors rounded-lg"
+                  aria-label="Like post"
+                >
+                  <motion.div
+                    animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
+                    transition={{ duration: 0.3, ease: 'easeOut' }}
                   >
-                    <motion.div
-                      animate={isLiked ? { scale: [1, 1.3, 1] } : {}}
-                      transition={{ duration: 0.3, ease: 'easeOut' }}
-                    >
-                      <HeartIcon size={18} strokeWidth={1.5} />
-                    </motion.div>
-                  </Button>
-                </motion.div>
-              </Magnetic>
+                    <HeartIcon size={18} strokeWidth={1.5} />
+                  </motion.div>
+                </Button>
+              </AnimatedButtonWrapper>
 
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+              <AnimatedButtonWrapper>
                 <Button
                   size="icon"
                   variant="ghost"
                   onClick={handleCommentClick}
-                  className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
+                  className="text-brand-text-secondary hover:text-black transition-colors rounded-lg"
                   aria-label={showComments ? 'Hide comments' : 'Show comments'}
                   aria-expanded={showComments}
                   aria-controls={`comments-${post.id}`}
                 >
                   <CommentIcon size={18} strokeWidth={1.5} />
                 </Button>
-              </motion.div>
+              </AnimatedButtonWrapper>
 
-              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+              <AnimatedButtonWrapper>
                 <Button
                   size="icon"
                   variant="ghost"
                   onClick={handleShare}
-                  className="text-[#2F384C] hover:text-black transition-colors rounded-lg"
+                  className="text-brand-text-secondary hover:text-black transition-colors rounded-lg"
                   aria-label="Share post"
                 >
                   <SendShareIcon size={18} strokeWidth={1.5} />
                 </Button>
-              </motion.div>
+              </AnimatedButtonWrapper>
             </div>
           </div>
         }
