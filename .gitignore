@@ -22,3 +22,11 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Test coverage
+coverage/
+stats.html
+
+# Temporary files
+.temp/
+.cache/

@@ -30,6 +30,8 @@ A modern social media feed application built with React and TypeScript.
 | **Framer Motion** | Animations |
 | **React Hook Form + Zod** | Form handling & validation |
 | **Radix UI** | Accessible component primitives |
+| **Vitest** | Unit & integration testing |
+| **Testing Library** | React component testing |
 
 ## Code Structure
 
@@ -47,6 +49,7 @@ src/
 ├── pages/           # Page components
 ├── services/        # Business logic
 ├── stores/          # Zustand stores
+├── test/            # Test setup & integration tests
 ├── types/           # TypeScript types
 └── utils/           # Helper functions
 ```
@@ -55,43 +58,54 @@ src/
 
 ```bash
 # Install dependencies
-npm install
+pnpm install
 
 # Run development server
-npm run dev
+pnpm dev
 
 # Build for production
-npm run build
+pnpm build
 
 # Analyze bundle size
-npm run build:analyze
+pnpm build:analyze
+
+# Run tests
+pnpm test
+
+# Run tests with UI
+pnpm test:ui
+
+# Run tests with coverage
+pnpm test:coverage
 ```
 
 ## What Can Be Improved
 
 | Area | Improvement | How |
 |------|-------------|-----|
-| **Testing** | Add unit & integration tests | Jest + React Testing Library |
-| **Performance** | Optimize bundle size | Code splitting, tree shaking |
-| **Accessibility** | ARIA labels & keyboard nav | Audit with axe-devtools |
-| **Error Handling** | Better error boundaries | Implement global error handler |
-| **Caching** | Optimistic updates | Improve TanStack Query mutations |
-| **Real-time** | Live updates | WebSocket integration |
-| **Image Optimization** | Lazy loading images | Add intersection observer |
-| **PWA** | Offline support | Service worker implementation |
+| **Testing** | Expand test coverage | Add unit tests for utilities & hooks |
+| **Performance** | Reduce initial load time | Implement route-based code splitting, defer non-critical JS |
+| **Accessibility** | Automated a11y testing | Add axe-devtools, fix keyboard navigation gaps |
+| **Error Handling** | Global error boundaries | Implement React error boundaries for graceful failures |
+| **Monitoring** | Performance tracking | Add Core Web Vitals monitoring, error tracking (Sentry) |
+| **Image Optimization** | Responsive images | Add next-gen formats (WebP/AVIF), lazy loading with blur-up |
+| **PWA** | Offline support | Service worker for offline-first experience |
 | **Backend** | Real API integration | Replace mock API with actual backend |
-| **Security** | Sanitize user input | Already using DOMPurify, can enhance |
+| **Security** | Comprehensive XSS protection | Extend DOMPurify to comments and user-generated content |
+| **Auth Security** | Secure token storage | Implement HTTP-only cookies, refresh token rotation |
+| **Input Validation** | API response validation | Validate all API responses with Zod schemas |
 
 ## Key Features Implemented
 
 - Action resumption (login redirects back to intended action)
 - Optimistic UI updates for better perceived performance
-- Debounced API calls to reduce server load
-- Lazy loading for code splitting
-- Accessibility utilities (focus management, ARIA)
-- Error logging utility
-- Markdown shortcuts in editor (Cmd+B for bold, etc.)
+- Query caching to minimize redundant API calls
+- Lazy loading for code splitting (auth pages, devtools)
+- Accessibility utilities (screen reader announcements, ARIA labels)
+- Error logging utility (mutation, query, and general errors)
+- Markdown shortcuts in editor (Cmd+B for bold, Cmd+I for italic)
 - Mobile-optimized responsive layout
+- Integration tests for core features (auth modal, RTE, feed)
 
 ## Performance Optimizations
 
